@@ -1,0 +1,562 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Telcobright — design layer.
+ *
+ * The brand is unchanged: Inter display over DM Sans body, the orange→indigo
+ * gradient on accent words and primary buttons, warm-white sections alternating
+ * with the near-black product tiles. What changed in the refresh is how those
+ * pieces are drawn — fluid type instead of three breakpoints of fixed sizes, a
+ * real depth scale, one easing curve everywhere, and motion that is additive
+ * rather than load-bearing.
+ */
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* One curve for everything that moves. Matches transitionTimingFunction. */
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Height of the fixed header; anchors and sticky rails both read it. */
+    --header-h: 72px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* The header is fixed, so #anchor targets must clear it. */
+    scroll-padding-top: calc(var(--header-h) + 2rem);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-white font-sans text-[16px] leading-[1.6] text-ink-500 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-ink-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-grad-to text-white;
+  }
+
+  /*
+   * One focus style for the whole site, visible on both the light sections and
+   * the dark ones. `outline` rather than a ring so it follows the element's own
+   * shape and is never clipped by an ancestor's overflow.
+   */
+  :focus-visible {
+    outline: 2px solid theme('colors.grad.to');
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  [data-surface='dark'] :focus-visible {
+    outline-color: #fff;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 sm:px-8 lg:px-14;
+  }
+
+  /* Vertical rhythm. One fluid step instead of py-16/py-20/py-24 sprinkled
+     around, so section spacing scales with the viewport rather than jumping. */
+  .section {
+    padding-block: clamp(4rem, 2.75rem + 4vw, 7rem);
+  }
+
+  .section-tight {
+    padding-block: clamp(3rem, 2.25rem + 2.5vw, 4.75rem);
+  }
+
+  /* Orange → indigo gradient on text, as used for the accent words in every
+     heading on the live site. */
+  .text-gradient {
+    @apply bg-brand-gradient bg-clip-text text-transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Section eyebrow: "WHY CHOOSE US", "TESTIMONIALS", "GALLERY", "FAQ".
+     The gradient dot ties the label back to the heading beneath it. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-display text-[13px] font-medium uppercase tracking-[1.4px] text-ink-400;
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply h-1.5 w-1.5 shrink-0 rounded-full bg-brand-gradient;
+  }
+
+  .eyebrow-light {
+    @apply text-white/60;
+  }
+
+  /* Display sizes are fluid: 32→48 for sections, 44→72 for the hero. They hit
+     the live site's figures at both ends and interpolate in between, which the
+     old three fixed steps did not. */
+  .h-section {
+    @apply font-display font-bold leading-[1.05] tracking-[-0.02em] text-ink-900;
+    font-size: clamp(2rem, 1.35rem + 2.1vw, 3rem);
+  }
+
+  .h-hero {
+    @apply font-display font-bold leading-[1.02] tracking-[-0.025em] text-white;
+    font-size: clamp(2.75rem, 1.7rem + 3.6vw, 4.5rem);
+  }
+
+  .h-page {
+    @apply font-display font-bold leading-[1.08] tracking-[-0.02em] text-white;
+    font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  }
+
+  .lede {
+    @apply text-[16px] leading-[1.7] text-ink-500 lg:text-[17px];
+  }
+
+  /* ---------------------------------------------------------- buttons --- */
+
+  .btn {
+    @apply relative inline-flex select-none items-center justify-center gap-2.5 overflow-hidden rounded-xl px-6 py-3.5 font-display text-[15px] font-medium leading-none;
+    /* Contains the hover layer below, which sits at z-index -1: inside a
+       stacking context that paints it over the button's own background but
+       still under the label, including a bare text node. */
+    isolation: isolate;
+    transition:
+      transform 0.35s var(--ease),
+      box-shadow 0.35s var(--ease),
+      border-color 0.35s var(--ease),
+      background-color 0.35s var(--ease),
+      color 0.35s var(--ease);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-gradient {
+    @apply btn bg-brand-gradient text-white shadow-soft;
+  }
+
+  /* The reversed gradient, faded in on hover: the fill shifts rather than
+     dimming, which is what `opacity` on the whole button used to do. */
+  .btn-gradient::before {
+    content: '';
+    @apply absolute inset-0 z-[-1] opacity-0;
+    background: linear-gradient(45deg, theme('colors.grad.to'), theme('colors.grad.from'));
+    transition: opacity 0.45s var(--ease);
+  }
+
+  .btn-gradient:hover {
+    @apply -translate-y-0.5 shadow-glow;
+  }
+
+  .btn-gradient:hover::before {
+    @apply opacity-100;
+  }
+
+  .btn-outline {
+    @apply btn border border-ink-200 bg-white text-ink-900 shadow-soft;
+  }
+
+  .btn-outline:hover {
+    @apply -translate-y-0.5 border-ink-900 shadow-card;
+  }
+
+  .btn-dark {
+    @apply btn bg-ink-700 text-white shadow-soft;
+  }
+
+  .btn-dark:hover {
+    @apply -translate-y-0.5 bg-ink-900 shadow-card;
+  }
+
+  /* Dark sections: a glass outline button that reads on the near-black. */
+  .btn-light {
+    @apply btn border border-white/25 bg-white/5 text-white backdrop-blur-sm;
+  }
+
+  .btn-light:hover {
+    @apply -translate-y-0.5 border-white/60 bg-white/10;
+  }
+
+  /* Header nav item: a gradient underline that wipes in from the left. */
+  .nav-link {
+    @apply relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 font-display text-[13px] font-normal text-white/75;
+    transition: color 0.3s var(--ease);
+  }
+
+  .nav-link:hover {
+    @apply text-white;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-brand-gradient;
+    transition: transform 0.35s var(--ease);
+  }
+
+  .nav-link:hover::after,
+  .group:hover > .nav-link::after,
+  .nav-link[aria-expanded='true']::after {
+    @apply scale-x-100;
+  }
+
+  /* The "Know More" link, with the arrow that slides on hover. */
+  .link-arrow {
+    @apply inline-flex items-center gap-3 font-display text-[14px] text-white;
+    transition: color 0.3s var(--ease);
+  }
+
+  .link-arrow svg {
+    transition: transform 0.4s var(--ease);
+  }
+
+  .link-arrow:hover svg,
+  .group:hover .link-arrow svg {
+    transform: translateX(6px);
+  }
+
+  /* ------------------------------------------------------------ cards --- */
+
+  /* Light card: a hairline plus a shadow that deepens on hover. The elevation
+     carries the hover state, rather than a border changing colour. */
+  .card {
+    @apply rounded-2xl border border-ink-200/70 bg-white shadow-soft;
+    transition:
+      transform 0.45s var(--ease),
+      box-shadow 0.45s var(--ease),
+      border-color 0.45s var(--ease);
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-1 border-ink-200 shadow-lift;
+  }
+
+  /*
+   * The near-black product tile. The gradient lives in a masked ::before that
+   * fades in on hover, so the card's edge lights up in the brand colours
+   * instead of the whole tile changing tone.
+   */
+  .card-dark {
+    @apply relative overflow-hidden rounded-2xl border border-white/5 bg-surface-card;
+    transition:
+      transform 0.45s var(--ease),
+      box-shadow 0.45s var(--ease),
+      border-color 0.45s var(--ease);
+  }
+
+  .card-dark::before {
+    content: '';
+    @apply pointer-events-none absolute inset-0 z-[1] rounded-2xl opacity-0;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(234, 88, 12, 0.85), rgba(79, 70, 229, 0.85));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    transition: opacity 0.45s var(--ease);
+  }
+
+  .card-dark:hover {
+    @apply -translate-y-1 shadow-lift;
+  }
+
+  .card-dark:hover::before,
+  .card-dark:focus-within::before {
+    @apply opacity-100;
+  }
+
+  /* A gradient hairline, used to close section headers and dark bands. */
+  .rule-gradient {
+    @apply h-px w-full bg-brand-hairline;
+  }
+
+  /* --------------------------------------------------------- surfaces --- */
+
+  /* Ambient colour behind the dark bands: a soft blob in one of the brand
+     stops, heavily blurred. Depth without another image request. */
+  .glow {
+    @apply pointer-events-none absolute rounded-full blur-[90px];
+  }
+
+  .glass-bar {
+    background-color: rgba(11, 7, 8, 0.72);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+  }
+
+  /* ----------------------------------------------------- logo marquee --- */
+
+  /* Client logo strip. The track holds two identical rows and slides exactly
+     half its width, which puts the second copy where the first started — a loop
+     with no seam. Hovering pauses it so a logo can be read. */
+  .logo-marquee {
+    @apply overflow-hidden;
+  }
+
+  .logo-marquee__track {
+    @apply flex w-max;
+    animation: logo-marquee 46s linear infinite;
+  }
+
+  .logo-marquee:hover .logo-marquee__track,
+  .logo-marquee:focus-within .logo-marquee__track {
+    animation-play-state: paused;
+  }
+
+  .logo-marquee__row {
+    @apply flex shrink-0 items-center gap-x-4 pr-4 sm:gap-x-5 sm:pr-5;
+  }
+
+  @keyframes logo-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* No motion: drop the duplicate row and let the real one wrap into a centred
+     grid, rather than leaving a frozen, half-scrolled strip. */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-marquee {
+      @apply overflow-visible;
+    }
+
+    .logo-marquee__track {
+      @apply w-full;
+      animation: none;
+    }
+
+    .logo-marquee__row[aria-hidden='true'] {
+      @apply hidden;
+    }
+
+    .logo-marquee__row {
+      @apply w-full flex-wrap justify-center gap-y-4 pr-0;
+    }
+  }
+}
+
+/*
+ * Scroll reveal.
+ *
+ * Driven by the scroll position itself (`animation-timeline: view()`), not by
+ * an IntersectionObserver — no JavaScript, no hydration cost, and nothing left
+ * hidden if a script fails. Browsers without scroll-driven animations never
+ * apply the rule and simply render the content, so the `@supports` guard is the
+ * whole fallback.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 24%;
+    }
+
+    /* Children rise one after another as the group scrolls in. */
+    [data-reveal-children] > * {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 26%;
+    }
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Long-form page body.
+ *
+ * The solution pages come across from WordPress as rich HTML — nested lists
+ * inside table cells, bold run-ins, inline figures. These rules reproduce the
+ * live site's typography for that markup: justified DM Sans body, Inter
+ * headings, and tables that scroll rather than overflow on a phone.
+ */
+@layer components {
+  .page-body {
+    @apply text-[16px] leading-[1.7] text-ink-500;
+    /* Several pages quote bare reference URLs (GSMA specs, 3GPP archives, a
+       Dialogic product page) as running text, not as links. They offer no break
+       opportunity, so without this they push the page sideways on a phone.
+       `break-word` rather than `anywhere` on purpose: `anywhere` also shrinks
+       min-content width, which lets auto table layout squeeze a narrow column
+       like "Stage" down to one character per line. */
+    overflow-wrap: break-word;
+  }
+
+  /* A gradient tick in the margin of every h2 — these pages run long, and they
+     need a stronger signal for where one topic ends and the next starts. */
+  .page-body > h2 {
+    @apply relative mb-4 mt-16 font-display text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-900 first:mt-0 sm:text-[32px];
+  }
+
+  .page-body > h2::before {
+    content: '';
+    @apply absolute -left-6 top-[0.3em] hidden h-[0.85em] w-[3px] rounded-full bg-brand-gradient lg:block;
+  }
+
+  .page-body > h3 {
+    @apply mb-3 mt-11 font-display text-[22px] font-bold leading-tight tracking-[-0.01em] text-ink-900 sm:text-[24px];
+  }
+
+  .page-body > h4 {
+    @apply mb-3 mt-8 font-display text-[19px] font-bold leading-tight text-ink-900 sm:text-[20px];
+  }
+
+  .page-body > h5,
+  .page-body > h6 {
+    @apply mb-2 mt-7 font-display text-[17px] font-bold leading-tight text-ink-900;
+  }
+
+  .page-body p {
+    @apply my-4 text-justify;
+  }
+
+  .page-body a {
+    @apply font-medium text-grad-to underline decoration-grad-to/30 underline-offset-[3px] transition-colors hover:decoration-grad-to;
+    overflow-wrap: break-word;
+  }
+
+  .page-body ul,
+  .page-body ol {
+    @apply my-4 space-y-2 pl-5;
+  }
+
+  .page-body > ul,
+  .page-body li > ul {
+    @apply list-disc;
+  }
+
+  .page-body ol {
+    @apply list-decimal;
+  }
+
+  .page-body li {
+    @apply marker:text-grad-from/70;
+  }
+
+  .page-body li > p {
+    @apply my-1 text-left;
+  }
+
+  .page-body img {
+    @apply mx-auto my-2 h-auto max-w-full;
+  }
+
+  /* A figure whose source file is gone. See markMissingImages in the content
+     generator — one image on the SMS Gateway page 404s on the old site too. */
+  .page-body .missing-figure {
+    @apply my-2 inline-flex items-center justify-center rounded-xl border border-dashed border-ink-200 bg-surface-subtle px-5 py-8 text-center text-[13px] text-ink-400;
+  }
+
+  /*
+   * Tables. The wrapper carries the rounding, the border and the scroll, so
+   * cells only ever draw their inner rules — no doubled line at the edge, and
+   * the corners stay round however many columns a page throws at it.
+   */
+  .page-body .table-wrap {
+    @apply my-7 overflow-x-auto rounded-xl border border-ink-200 bg-white shadow-soft;
+  }
+
+  .page-body table {
+    @apply w-full border-collapse text-left align-top text-[15px];
+  }
+
+  .page-body th,
+  .page-body td {
+    @apply border-b border-r border-ink-200/80 px-4 py-3 align-top;
+  }
+
+  .page-body tr > *:last-child {
+    @apply border-r-0;
+  }
+
+  .page-body tbody tr:last-child > * {
+    @apply border-b-0;
+  }
+
+  /* Column headers get the small-caps treatment. Row headers do not: several
+     pages use the first column for full phrases ("Core messaging engine"),
+     and uppercasing those makes them harder to read, not easier. */
+  .page-body thead th {
+    @apply bg-surface-subtle font-display text-[13px] font-semibold uppercase tracking-[0.06em] text-ink-900;
+  }
+
+  .page-body tbody th {
+    @apply bg-surface-subtle/60 font-display font-semibold text-ink-900;
+  }
+
+  /* Row highlight on hover: with merged cells, following one row across a wide
+     spec table is otherwise genuinely hard. */
+  .page-body tbody tr {
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .page-body tbody tr:hover {
+    @apply bg-surface-subtle/70;
+  }
+
+  .page-body td > p:first-child,
+  .page-body th > p:first-child {
+    @apply mt-0;
+  }
+
+  .page-body td > p:last-child,
+  .page-body th > p:last-child {
+    @apply mb-0;
+  }
+
+  .page-body td p,
+  .page-body th p {
+    @apply text-left;
+  }
+
+  .page-body td ul,
+  .page-body td ol {
+    @apply my-2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+.env*.local
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+# public/media IS committed on purpose. `npm run fetch:media` pulls it from the
+# legacy site, but ~80 of those diagrams 404 there now — this repo is the only
+# remaining copy. See MIGRATION.md, "Recovered images".
+.migration/

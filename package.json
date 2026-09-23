@@ -1,0 +1,32 @@
+{
+  "name": "telcobright-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Telcobright Limited corporate website \u2014 Next.js migration from WordPress/Elementor",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "fetch:media": "node scripts/fetch-media.mjs",
+    "migrate:fetch": "node scripts/migrate/fetch-pages.mjs",
+    "migrate:extract": "node scripts/migrate/extract.mjs",
+    "migrate:generate": "node scripts/migrate/generate.mjs",
+    "migrate:verify": "node scripts/migrate/verify.mjs"
+  },
+  "dependencies": {
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "10.4.21",
+    "node-html-parser": "^9.0.4",
+    "postcss": "^8.5.28",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.3"
+  }
+}
