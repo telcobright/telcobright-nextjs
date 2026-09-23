@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Inter } from 'next/font/google';
-import { site } from '@content/site';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import { getSite } from '@/server/content';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -17,26 +15,36 @@ const inter = Inter({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: `${site.name} — ${site.tagline}`,
-    template: `%s | ${site.name}`,
-  },
-  description: site.description,
-  openGraph: {
-    type: 'website',
-    siteName: site.name,
-    locale: site.locale,
-    url: site.url,
-    title: `${site.name} — ${site.tagline}`,
+/** Built from the store, so the admin controls the site's own metadata too. */
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSite();
+  return {
+    metadataBase: new URL(site.url),
+    title: {
+      default: `${site.name} — ${site.tagline}`,
+      template: `%s | ${site.name}`,
+    },
     description: site.description,
-  },
-  twitter: { card: 'summary_large_image' },
-  alternates: { canonical: '/' },
-  robots: { index: true, follow: true },
-};
+    openGraph: {
+      type: 'website',
+      siteName: site.name,
+      locale: site.locale,
+      url: site.url,
+      title: `${site.name} — ${site.tagline}`,
+      description: site.description,
+    },
+    twitter: { card: 'summary_large_image' },
+    alternates: { canonical: '/' },
+    robots: { index: true, follow: true },
+  };
+}
 
+/**
+ * The document shell: fonts, the stylesheet, and nothing else.
+ *
+ * Site chrome lives in `(site)/layout.tsx` so that `/admin` can have its own,
+ * rather than the public header and footer wrapping the editor.
+ */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${inter.variable}`}>
@@ -48,15 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         the tree is still reported.
       */}
       <body suppressHydrationWarning>
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-brand-gradient focus:px-5 focus:py-2.5 focus:font-display focus:text-sm focus:font-medium focus:text-white focus:shadow-glow"
-        >
-          Skip to content
-        </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

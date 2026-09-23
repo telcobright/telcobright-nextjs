@@ -1,21 +1,21 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getSolution, solutions } from '@content/solutions';
 import { tableOfContents } from '@content/types';
+import { getPage, getPublishedPages } from '@/server/content';
 import { Blocks } from '@/components/Blocks';
 import { PageHero } from '@/components/PageHero';
 import { QuickNav } from '@/components/QuickNav';
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return solutions.map((s) => ({ slug: s.slug }));
+export async function generateStaticParams() {
+  return (await getPublishedPages()).map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const page = getSolution(slug);
-  if (!page) return {};
+  const page = await getPage(slug);
+  if (!page || page.draft) return {};
   return {
     title: page.title,
     description: page.summary,
@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function SolutionPage({ params }: Params) {
   const { slug } = await params;
-  const page = getSolution(slug);
-  if (!page) notFound();
+  const page = await getPage(slug);
+  if (!page || page.draft) notFound();
 
   const toc = tableOfContents(page.blocks);
 

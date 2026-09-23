@@ -358,6 +358,77 @@
 }
 
 /*
+ * Admin.
+ *
+ * The editor is a tool, not a page of the site: one column of plain controls,
+ * no motion, no ornament. It borrows the palette and the two typefaces so it
+ * still feels like the same product, and nothing else.
+ */
+@layer components {
+  .adm-label {
+    @apply mb-1.5 block font-display text-[13px] font-medium text-ink-900;
+  }
+
+  .adm-hint {
+    @apply mt-1.5 text-[12px] leading-relaxed text-ink-400;
+  }
+
+  .adm-input {
+    @apply w-full rounded-lg border border-ink-200 bg-surface px-3.5 py-2.5 font-sans text-[14px] text-ink-900 transition-[border-color,box-shadow] duration-200 placeholder:text-ink-300 hover:border-ink-300 focus:border-grad-to focus:outline-none focus:ring-4 focus:ring-grad-to/10;
+  }
+
+  textarea.adm-input {
+    @apply leading-relaxed;
+    field-sizing: content;
+    min-height: 5rem;
+  }
+
+  .adm-card {
+    @apply rounded-2xl border border-ink-200/80 bg-surface p-6 shadow-soft;
+  }
+
+  .adm-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 font-display text-[13px] font-medium transition-colors duration-200;
+  }
+
+  .adm-btn-primary {
+    @apply adm-btn bg-brand-gradient text-white hover:opacity-90;
+  }
+
+  .adm-btn-ghost {
+    @apply adm-btn border border-ink-200 bg-surface text-ink-900 hover:border-ink-900;
+  }
+
+  .adm-btn-danger {
+    @apply adm-btn border border-ink-200 bg-surface text-brand hover:border-brand hover:bg-brand-50;
+  }
+
+  .adm-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-surface-subtle px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-ink-500;
+  }
+
+  .adm-section-title {
+    @apply font-display text-[17px] font-bold tracking-[-.2px] text-ink-900;
+  }
+
+  .adm-table {
+    @apply w-full border-collapse text-left text-[14px];
+  }
+
+  .adm-table th {
+    @apply border-b border-ink-200 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-400;
+  }
+
+  .adm-table td {
+    @apply border-b border-ink-200/70 px-4 py-3 align-top text-ink-700;
+  }
+
+  .adm-table tr:last-child td {
+    @apply border-b-0;
+  }
+}
+
+/*
  * Scroll reveal.
  *
  * Driven by the scroll position itself (`animation-timeline: view()`), not by

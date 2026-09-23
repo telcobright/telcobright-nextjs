@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { footerNav, newsletter, site } from '@content/site';
 import { media } from '@/lib/media';
+import type { SiteContent } from '@/server/types';
 
 /**
  * The live footer: a dark band carrying the newsletter panel, four columns
@@ -10,7 +10,9 @@ import { media } from '@/lib/media';
  * telcobright.com — every entry in the three link columns points at "#" there,
  * because those pages were never built.
  */
-export function Footer() {
+export function Footer({ site }: { site: SiteContent }) {
+  const { footerNav, newsletter } = site;
+
   return (
     <footer data-surface="dark" className="relative overflow-hidden bg-surface-dark text-white">
       <div

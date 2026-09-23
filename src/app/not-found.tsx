@@ -1,9 +1,20 @@
 import Link from 'next/link';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { PageHero } from '@/components/PageHero';
+import { getSite } from '@/server/content';
 
-export default function NotFound() {
+/**
+ * Unmatched URLs land outside the (site) group, so this page brings the header
+ * and footer with it rather than rendering bare.
+ */
+export default async function NotFound() {
+  const site = await getSite();
+
   return (
     <>
+      <Header site={site} />
+      <main id="main">
       <PageHero eyebrow="404" title="We couldn’t find that page" />
 
       <section className="section bg-white">
@@ -22,6 +33,8 @@ export default function NotFound() {
           </div>
         </div>
       </section>
+      </main>
+      <Footer site={site} />
     </>
   );
 }

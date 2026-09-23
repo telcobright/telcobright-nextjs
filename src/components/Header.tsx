@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { headerNav, site } from '@content/site';
 import { media } from '@/lib/media';
 import { cn } from '@/lib/cn';
+import type { SiteContent } from '@/server/types';
 
 /**
  * The live header: white wordmark on a dark bar, centred nav, with
@@ -14,8 +14,12 @@ import { cn } from '@/lib/cn';
  * It is fixed rather than absolute, and transparent only while the page is at
  * the top — once you scroll it becomes a frosted bar, so the nav stays legible
  * over the white sections instead of disappearing into them.
+ *
+ * Nav, logo and social links all come from the store via the layout, so they
+ * are editable from the admin rather than baked in here.
  */
-export function Header() {
+export function Header({ site }: { site: SiteContent }) {
+  const headerNav = site.headerNav;
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);

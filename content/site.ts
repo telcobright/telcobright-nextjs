@@ -77,7 +77,8 @@ export const footerNav = [
     links: [
       { label: 'Who we are', href: '#' },
       { label: 'Case Study', href: '#' },
-      { label: 'Careers', href: '#' },
+      // The one dead footer link that now has a page behind it.
+      { label: 'Careers', href: '/careers' },
       { label: 'Blog', href: '#' },
       { label: 'Work with us', href: '#' },
     ],

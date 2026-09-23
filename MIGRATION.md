@@ -292,6 +292,32 @@ broken:
   prose. It reads as a slide deck rather than a web page. It is migrated exactly
   as-is; worth rewriting at some point.
 
+## The admin, and what it changed
+
+The site is now edited from `/admin` rather than from the files. Two things about that are
+worth knowing when reading the rest of this document.
+
+**The migrated content became the default, not the source.** `content/*.ts` is what the site
+renders until something is saved from the admin; from then on the saved copy in `/data`
+wins for that document. `npm run migrate:generate` still rewrites `content/`, so re-running
+the migration cannot trample edits — and `npm run migrate:verify` still measures the
+rendered pages, so parity is checked against what visitors actually get.
+
+**Nothing here was rewritten to suit the editor.** The block model the migration produced is
+the model the editor edits, spans and all. Tables are edited as JSON because a grid with
+merged cells has no honest small form, and these came from WordPress rather than being
+written by hand.
+
+## Careers
+
+`/careers` and the application form are new — the old site had neither, and the footer's
+`Careers` link went to `#`. That link now points at the page; it is the only dead link that
+gained a destination.
+
+Applications are stored in `/data` with the CV beside them. CVs are never public: they are
+written under a generated name outside `public/`, checked by their file signature rather
+than their extension, and served only through the admin to a signed-in session.
+
 ## Pages that exist here but not on the old site
 
 Nothing links to either; they are reachable by URL and listed in the sitemap.
