@@ -1,19 +1,28 @@
 import type { MetadataRoute } from 'next';
-import { site } from '@content/site';
-import { solutions } from '@content/solutions';
+import { getPublishedPages, getSite } from '@/server/content';
+import { listOpenJobs } from '@/server/careers';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+/** Built from the store, so anything added in the admin is listed. */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [site, pages, jobs] = await Promise.all([getSite(), getPublishedPages(), listOpenJobs()]);
   const now = new Date();
 
   return [
     { url: site.url, lastModified: now, changeFrequency: 'monthly', priority: 1 },
     { url: `${site.url}/solutions`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${site.url}/careers`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${site.url}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.7 },
-    ...solutions.map((s) => ({
-      url: `${site.url}/solutions/${s.slug}`,
+    ...pages.map((p) => ({
+      url: `${site.url}/solutions/${p.slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
+    })),
+    ...jobs.map((job) => ({
+      url: `${site.url}/careers/${job.slug}`,
+      lastModified: new Date(job.updatedAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
     })),
   ];
 }

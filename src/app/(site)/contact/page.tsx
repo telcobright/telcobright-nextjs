@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { site } from '@content/site';
+import { getSite } from '@/server/content';
 import { GradientHeading } from '@/components/ui';
 import { PageHero } from '@/components/PageHero';
 import { ContactForm } from '@/components/ContactForm';
@@ -10,13 +10,18 @@ import { ContactForm } from '@/components/ContactForm';
  * here do the same. This page is kept as a working alternative for anyone who
  * would rather fill in a form; nothing on the site links to it.
  */
-export const metadata: Metadata = {
-  title: 'Contact',
-  description: `Talk to the Telcobright team in Dhaka — ${site.contact.email}, ${site.contact.phone}.`,
-  alternates: { canonical: '/contact' },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSite();
+  return {
+    title: 'Contact',
+    description: `Talk to the ${site.shortName} team — ${site.contact.email}, ${site.contact.phone}.`,
+    alternates: { canonical: '/contact' },
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getSite();
+
   return (
     <>
       <PageHero title="Contact" breadcrumb="Contact" />

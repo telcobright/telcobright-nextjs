@@ -9,3 +9,7 @@ next-env.d.ts
 # legacy site, but ~80 of those diagrams 404 there now — this repo is the only
 # remaining copy. See MIGRATION.md, "Recovered images".
 .migration/
+# Content saved from the admin, job posts, applications and uploaded files.
+# Never committed: it holds CVs, which are personal data, and it is per
+# environment. Back it up separately. See README, "The admin".
+data/

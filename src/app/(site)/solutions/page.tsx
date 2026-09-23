@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { solutions } from '@content/solutions';
+import { getPublishedPages } from '@/server/content';
 import { ArrowRight, GradientHeading } from '@/components/ui';
 import { PageHero } from '@/components/PageHero';
 import { Spotlight } from '@/components/Spotlight';
@@ -20,7 +20,9 @@ export const metadata: Metadata = {
   alternates: { canonical: '/solutions' },
 };
 
-export default function SolutionsIndexPage() {
+export default async function SolutionsIndexPage() {
+  const solutions = await getPublishedPages();
+
   return (
     <>
       <PageHero title="Products & Solutions" breadcrumb="Products & Solutions" />

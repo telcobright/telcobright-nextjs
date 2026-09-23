@@ -1,52 +1,51 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import {
-  additional,
-  clients,
-  faq,
-  gallery,
-  hero,
-  heroCard,
-  highlights,
-  introduction,
-  products,
-  testimonials,
-} from '@content/home';
-import { site } from '@content/site';
 import { Aurora } from '@/components/Aurora';
 import { Faq } from '@/components/Faq';
 import { LogoMarquee } from '@/components/LogoMarquee';
 import { Spotlight } from '@/components/Spotlight';
 import { Testimonials as TestimonialCarousel } from '@/components/Testimonials';
 import { ArrowRight, Eyebrow, GradientHeading, SectionHeader } from '@/components/ui';
+import { getHome, getSite } from '@/server/content';
+import type { HomeContent } from '@/server/types';
 import { media } from '@/lib/media';
 import { cn } from '@/lib/cn';
 
-export const metadata: Metadata = {
-  title: `${site.name} — ${site.tagline}`,
-  description: site.description,
-  alternates: { canonical: '/' },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSite();
+  return {
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+    alternates: { canonical: '/' },
+  };
+}
 
-export default function HomePage() {
+/**
+ * Every section reads from the store, so all of it is editable from
+ * /admin/home. The section components take their slice as a prop rather than
+ * reaching for module scope, which keeps them pure and previewable.
+ */
+export default async function HomePage() {
+  const home = await getHome();
+
   return (
     <>
-      <Hero />
-      <Clients />
-      <Products />
-      <Additional />
-      <Highlights />
-      <Testimonials />
-      <Gallery />
-      <FaqSection />
+      <Hero hero={home.hero} heroCard={home.heroCard} />
+      <Clients clients={home.clients} />
+      <Products introduction={home.introduction} products={home.products} />
+      <Additional additional={home.additional} />
+      <Highlights highlights={home.highlights} />
+      <Testimonials testimonials={home.testimonials} />
+      <Gallery gallery={home.gallery} />
+      <FaqSection faq={home.faq} />
     </>
   );
 }
 
 /* ---------------------------------------------------------------- hero --- */
 
-function Hero() {
+function Hero({ hero, heroCard }: { hero: HomeContent['hero']; heroCard: HomeContent['heroCard'] }) {
   return (
     <section
       data-surface="dark"
@@ -129,7 +128,7 @@ function Hero() {
 
 /* ------------------------------------------------------------- clients --- */
 
-function Clients() {
+function Clients({ clients }: { clients: HomeContent['clients'] }) {
   return (
     <section aria-labelledby="clients-title" className="section-tight border-b border-ink-200/70 bg-surface">
       <div className="container-page">
@@ -155,7 +154,13 @@ function Clients() {
 
 /* ------------------------------------------------------------ products --- */
 
-function Products() {
+function Products({
+  introduction,
+  products,
+}: {
+  introduction: HomeContent['introduction'];
+  products: HomeContent['products'];
+}) {
   return (
     <section id="products" className="bg-surface pb-[clamp(4rem,2.75rem+4vw,7rem)] pt-[clamp(3rem,2rem+3vw,5rem)]">
       <div className="container-page">
@@ -202,7 +207,7 @@ function Products() {
 
 /* ---------------------------------------------------------- additional --- */
 
-function Additional() {
+function Additional({ additional }: { additional: HomeContent['additional'] }) {
   return (
     <section id="additional-solutions" className="section relative scroll-mt-0 bg-surface-muted">
       {/* The live section is cut on a diagonal at the top and bottom. */}
@@ -266,7 +271,7 @@ function Additional() {
 
 /* --------------------------------------------------------- highlights --- */
 
-function Highlights() {
+function Highlights({ highlights }: { highlights: HomeContent['highlights'] }) {
   return (
     <section className="section bg-surface">
       <div className="container-page space-y-6 lg:space-y-8">
@@ -314,7 +319,7 @@ function Highlights() {
  * this heading over an empty widget; an empty section with a heading is worse
  * than no section, so it is left out until `testimonials.items` is filled.
  */
-function Testimonials() {
+function Testimonials({ testimonials }: { testimonials: HomeContent['testimonials'] }) {
   if (testimonials.items.length === 0) return null;
 
   return (
@@ -329,7 +334,7 @@ function Testimonials() {
 
 /* ------------------------------------------------------------- gallery --- */
 
-function Gallery() {
+function Gallery({ gallery }: { gallery: HomeContent['gallery'] }) {
   if (gallery.images.length === 0) return null;
 
   return (
@@ -384,7 +389,7 @@ function Gallery() {
 
 /* ----------------------------------------------------------------- faq --- */
 
-function FaqSection() {
+function FaqSection({ faq }: { faq: HomeContent['faq'] }) {
   return (
     <section id="faq" className="section scroll-mt-24 bg-surface">
       <div className="container-page">
