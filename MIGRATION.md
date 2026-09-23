@@ -275,6 +275,14 @@ broken:
 - **Quick Navigation.** The Elementor table-of-contents widget never finishes
   loading on any solution page — it renders a spinner forever. Here it is a real
   table of contents that lists the page's headings and tracks scroll position.
+- **Figures that sat side by side.** Elementor put some pictures in separate
+  columns of one row — the two book covers and the tool logos on the SMS
+  Gateway page. The extractor only recognised carousel images as a row, so
+  everything else came down as a stack of small pictures one per line. It now
+  also recognises a column that holds a single picture and nothing else beside
+  a sibling that does the same, and those render as a row again. (The files
+  themselves are fine, and small on purpose: `Image_008-1.jpg` is a 97×128
+  book cover, which is what WordPress held.)
 - **Merged table cells.** Four tables on the SMS Gateway page use `rowspan` and
   `colspan`. An early pass of the extractor dropped both, which left those rows
   one or two cells short and the tables visibly broken. The spans now survive

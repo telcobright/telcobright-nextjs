@@ -281,6 +281,39 @@ for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.html'))) {
     return false;
   };
 
+  const classOf = (n) => (typeof n.getAttribute === 'function' ? n.getAttribute('class') || '' : '');
+  /** A column holding one picture and no words — an image cell, in effect. */
+  const isPictureColumn = (n) =>
+    /elementor-column/.test(classOf(n)) &&
+    n.querySelectorAll('img').length === 1 &&
+    !n.text.replace(/\s|&nbsp;/g, '');
+
+  /**
+   * True when this image sat in its own Elementor column beside other columns
+   * that also held nothing but a picture — which is how the old page laid out
+   * the book covers and the tool logos on SMS Gateway. Whole-page columns do
+   * not count, or every image on the page would qualify; the column has to
+   * hold this picture and nothing else, and have a picture-only sibling.
+   */
+  const inColumnRow = (el) => {
+    let col = null;
+    for (let p = el; p; p = p.parentNode) {
+      if (/elementor-column/.test(classOf(p))) {
+        col = p;
+        break;
+      }
+    }
+    if (!col || !isPictureColumn(col)) return false;
+
+    const parent = col.parentNode;
+    if (!parent) return false;
+    const siblings = parent.childNodes.filter((n) => n.nodeType === 1 && n !== col);
+    return siblings.some(isPictureColumn);
+  };
+
+  /** Which kind of side-by-side row this image belongs to, if any. */
+  const rowKind = (el) => (inCarousel(el) ? 'carousel' : inColumnRow(el) ? 'column' : undefined);
+
   const walk = (el) => {
     for (const c of el.childNodes) {
       // Loose text sitting between elements is still page copy — several
@@ -310,9 +343,10 @@ for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.html'))) {
         const src = c.getAttribute('src') || '';
         if (!src) continue;
         const img = { t: 'img', src: mediaPath(src), alt: cleanAlt(c.getAttribute('alt')) };
-        // Logos and screenshots that sat in a carousel belong side by side, not
-        // stacked one per row.
-        if (inCarousel(c)) img.row = true;
+        // Pictures the old page showed beside each other belong side by side,
+        // not stacked one per row.
+        const kind = rowKind(c);
+        if (kind) img.row = kind;
         push(img);
         continue;
       }
@@ -378,7 +412,8 @@ for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.html'))) {
         const onlyImg = x.match(/^<img src="([^"]*)" alt="([^"]*)" \/>$/);
         if (onlyImg) {
           const img = { t: 'img', src: onlyImg[1], alt: onlyImg[2] };
-          if (inCarousel(c)) img.row = true;
+          const kind = rowKind(c);
+          if (kind) img.row = kind;
           push(img);
         }
         else push({ t: 'p', html: x });

@@ -473,6 +473,12 @@
     @apply mx-auto my-2 h-auto max-w-full;
   }
 
+  /* Pictures that sit side by side: the auto margin above would eat the free
+     space in the flex row and push them to opposite ends. */
+  .page-body .img-row img {
+    @apply m-0;
+  }
+
   /* A figure whose source file is gone. See markMissingImages in the content
      generator — one image on the SMS Gateway page 404s on the old site too. */
   .page-body .missing-figure {

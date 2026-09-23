@@ -157,7 +157,7 @@ function emit(page, blocks) {
       lines.push(`      ],`);
       lines.push(`    },`);
     } else if (b.t === 'img') {
-      lines.push(`    { t: 'img', src: ${q(b.src)}, alt: ${q(b.alt)}${b.row ? ', row: true' : ''} },`);
+      lines.push(`    { t: 'img', src: ${q(b.src)}, alt: ${q(b.alt)}${b.row ? `, row: ${q(b.row)}` : ''} },`);
     } else if (b.t === 'cta') {
       lines.push(`    { t: 'cta', label: ${q(b.label)}, href: ${q(b.href)} },`);
     } else if (b.t === 'table') {
