@@ -3,11 +3,13 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Aurora } from '@/components/Aurora';
 import { Faq } from '@/components/Faq';
+import { Gallery as GalleryGrid, type GalleryPhoto } from '@/components/Gallery';
 import { LogoMarquee } from '@/components/LogoMarquee';
 import { Spotlight } from '@/components/Spotlight';
 import { Testimonials as TestimonialCarousel } from '@/components/Testimonials';
 import { ArrowRight, Eyebrow, GradientHeading, SectionHeader } from '@/components/ui';
 import { getHome, getSite } from '@/server/content';
+import { imageSize } from '@/server/image-size';
 import type { HomeContent } from '@/server/types';
 import { media } from '@/lib/media';
 import { cn } from '@/lib/cn';
@@ -334,54 +336,26 @@ function Testimonials({ testimonials }: { testimonials: HomeContent['testimonial
 
 /* ------------------------------------------------------------- gallery --- */
 
-function Gallery({ gallery }: { gallery: HomeContent['gallery'] }) {
+async function Gallery({ gallery }: { gallery: HomeContent['gallery'] }) {
   if (gallery.images.length === 0) return null;
+
+  /*
+    Each photograph is measured here, on the server, so the grid can lay it out
+    at its own shape instead of cropping it into a uniform box — and so
+    next/image knows the aspect ratio and the page does not shift as they load.
+  */
+  const photos: GalleryPhoto[] = await Promise.all(
+    gallery.images.map(async (img) => {
+      const size = await imageSize(img.image);
+      return { image: img.image, alt: img.alt, width: size?.width ?? null, height: size?.height ?? null };
+    })
+  );
 
   return (
     <section id="gallery" className="section scroll-mt-24 bg-surface-muted">
       <div className="container-page">
         <SectionHeader eyebrow={gallery.eyebrow} parts={gallery.titleParts} />
-
-        {/*
-          A mixed grid rather than a row of identical thumbnails: the landscape
-          shots take two columns, the portrait ones take one, so the wall photo
-          and the team photos read at the size they were framed for.
-        */}
-        <ul
-          className="mt-12 grid auto-rows-[190px] grid-cols-2 gap-3 sm:auto-rows-[220px] sm:gap-4 lg:grid-cols-4"
-          data-reveal-children
-        >
-          {gallery.images.map((img) => (
-            <li
-              key={img.image}
-              className={cn(
-                'group relative overflow-hidden rounded-2xl bg-ink-100 ring-1 ring-ink-900/5 transition-shadow duration-500 ease-out-expo hover:shadow-lift',
-                img.wide && 'col-span-2'
-              )}
-            >
-              {/*
-                next/image here, plain <img> elsewhere: these are the heaviest
-                files on the page — 2.4 MB of originals up to 2048px wide — and
-                they render into tiles a few hundred pixels across. Resizing
-                them is worth the one exception.
-              */}
-              <Image
-                src={media(img.image)}
-                alt={img.alt}
-                fill
-                sizes="(min-width: 1024px) 25vw, 50vw"
-                className="object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.06]"
-              />
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              />
-              <span className="pointer-events-none absolute inset-x-4 bottom-4 translate-y-2 font-display text-[13px] font-medium text-white opacity-0 transition-all duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100">
-                {img.alt}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <GalleryGrid photos={photos} />
       </div>
     </section>
   );
