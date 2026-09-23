@@ -61,7 +61,7 @@ scripts/
 | Branch | Design |
 | --- | --- |
 | `main` | The migrated design: the old site's layout and palette, rebuilt and modernised. Light only. |
-| `design-2026` | The current pass: light **and** dark, aurora-lit dark bands, bento composition, cursor spotlight, scroll progress. Same content, same brand. |
+| `design-2026` | The current pass: aurora-lit dark bands, bento composition, cursor spotlight, scroll progress, a tokenised palette. Same content, same brand. |
 
 Both branches render identical copy — `npm run migrate:verify` passes on each.
 `MIGRATION.md` describes what separates them.
@@ -78,19 +78,15 @@ one-off value:
 
 ### Colour
 
-Surfaces and text are CSS custom properties, stored as bare `R G B` triplets so
-Tailwind's opacity modifiers keep working (`bg-surface/70`,
-`border-ink-200/60`). Light values are in `:root`, dark in `[data-theme=dark]`
-with a `prefers-color-scheme` fallback for when JavaScript is off.
+Surfaces and text are CSS custom properties on `:root` in `globals.css`, stored
+as bare `R G B` triplets so Tailwind's opacity modifiers keep working
+(`bg-surface/70`, `border-ink-200/60`).
 
-- **Use `bg-surface`, `text-ink-900`, `border-ink-200`.** They mean the right
-  thing in both themes.
-- **`text-white` is still literal white** — correct on the product tiles and
-  the hero, which are dark in both themes.
-- **Adding a colour?** Add it to both palettes in `globals.css`, not to a class.
-
-`src/lib/theme.ts` holds the bootstrap script (it sets `data-theme` before
-first paint, so there is no flash) and the storage key; `ThemeToggle` flips it.
+- **Use `bg-surface`, `text-ink-900`, `border-ink-200`** rather than `bg-white`
+  or a hex value, so the palette stays in one place.
+- **`text-white` is still literal white** — correct on the product tiles, the
+  hero and the footer, which are dark bands by design.
+- **Adding a colour?** Add it to the palette in `globals.css`, not to a class.
 
 ### Conventions worth knowing before editing a page
 

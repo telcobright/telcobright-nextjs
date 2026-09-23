@@ -9,8 +9,8 @@
  * gradient on accent words and primary buttons, the near-black product tiles.
  * What this branch changes is the philosophy around them:
  *
- *   1. Two themes, one set of classes. Every surface, text and hairline colour
- *      is a custom property. Light is the old site's palette to the digit.
+ *   1. Every surface, text and hairline colour is a custom property, so the
+ *      palette has one home rather than being spread across the components.
  *   2. Ambient light instead of flat fills — an aurora of brand-coloured light
  *      behind the dark bands, with film grain so large areas have tooth and
  *      wide gradients do not band.
@@ -25,15 +25,15 @@
   :root {
     color-scheme: light;
 
-    /* -- surfaces (light) ------------------------------------------------ */
+    /* -- surfaces -------------------------------------------------------- */
     --surface: 255 255 255;
     --surface-subtle: 247 246 244;
     --surface-muted: 240 239 237;
-    /* The product tile stays near-black in both themes. */
+    /* The near-black product tile. */
     --surface-card: 21 13 14;
     --surface-dark: 11 7 8;
 
-    /* -- text and hairlines (light) -------------------------------------- */
+    /* -- text and hairlines ---------------------------------------------- */
     --ink: 32 15 16;
     --ink-900: 23 23 23;
     --ink-700: 63 52 54;
@@ -60,68 +60,6 @@
     --header-h: 72px;
   }
 
-  /*
-   * Dark. Chosen, not inverted: the greys keep the warm cast of the brand
-   * brown so the dark theme belongs to the same site, and body text sits at
-   * about 11:1 on the page rather than pure white, which glares.
-   */
-  [data-theme='dark'] {
-    color-scheme: dark;
-
-    --surface: 10 7 8;
-    --surface-subtle: 20 16 17;
-    --surface-muted: 16 12 13;
-    --surface-card: 21 13 14;
-    --surface-dark: 6 4 5;
-
-    --ink: 245 243 242;
-    --ink-900: 247 245 244;
-    --ink-700: 227 221 219;
-    --ink-600: 201 194 192;
-    --ink-500: 181 173 171;
-    --ink-400: 154 146 144;
-    --ink-300: 122 114 113;
-    --ink-200: 48 40 41;
-    --ink-100: 27 21 22;
-    --ink-50: 18 16 17;
-
-    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.5), 0 6px 16px -8px rgb(0 0 0 / 0.7);
-    --shadow-card: 0 2px 4px rgb(0 0 0 / 0.5), 0 12px 32px -12px rgb(0 0 0 / 0.75);
-    --shadow-lift: 0 8px 18px -6px rgb(0 0 0 / 0.55), 0 24px 48px -20px rgb(0 0 0 / 0.9);
-
-    --highlight-card: linear-gradient(110deg, #221a2e 0%, #2a1b24 45%, #2b2019 100%);
-  }
-
-  /* No stored choice and no script: follow the system. */
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) {
-      color-scheme: dark;
-
-      --surface: 10 7 8;
-      --surface-subtle: 20 16 17;
-      --surface-muted: 16 12 13;
-      --surface-card: 21 13 14;
-      --surface-dark: 6 4 5;
-
-      --ink: 245 243 242;
-      --ink-900: 247 245 244;
-      --ink-700: 227 221 219;
-      --ink-600: 201 194 192;
-      --ink-500: 181 173 171;
-      --ink-400: 154 146 144;
-      --ink-300: 122 114 113;
-      --ink-200: 48 40 41;
-      --ink-100: 27 21 22;
-      --ink-50: 18 16 17;
-
-      --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.5), 0 6px 16px -8px rgb(0 0 0 / 0.7);
-      --shadow-card: 0 2px 4px rgb(0 0 0 / 0.5), 0 12px 32px -12px rgb(0 0 0 / 0.75);
-      --shadow-lift: 0 8px 18px -6px rgb(0 0 0 / 0.55), 0 24px 48px -20px rgb(0 0 0 / 0.9);
-
-      --highlight-card: linear-gradient(110deg, #221a2e 0%, #2a1b24 45%, #2b2019 100%);
-    }
-  }
-
   html {
     scroll-behavior: smooth;
     /* The header is fixed, so #anchor targets must clear it. */
@@ -131,7 +69,6 @@
 
   body {
     @apply bg-surface font-sans text-[16px] leading-[1.6] text-ink-500 antialiased;
-    transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
   }
 
   h1,
@@ -163,7 +100,6 @@
     border-radius: 3px;
   }
 
-  [data-theme='dark'] :focus-visible,
   [data-surface='dark'] :focus-visible {
     outline-color: #fff;
   }
@@ -323,34 +259,6 @@
     @apply scale-x-100;
   }
 
-  /*
-   * Theme switch. The icon shows the theme you would get by pressing it, and
-   * which one is visible is decided here rather than in React state — so the
-   * button is identical on the server and the client, with nothing to hydrate
-   * and no wrong icon flashing before the JavaScript lands.
-   */
-  .theme-icon-sun {
-    @apply hidden;
-  }
-
-  [data-theme='dark'] .theme-icon-sun {
-    @apply block;
-  }
-
-  [data-theme='dark'] .theme-icon-moon {
-    @apply hidden;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) .theme-icon-sun {
-      @apply block;
-    }
-
-    :root:not([data-theme]) .theme-icon-moon {
-      @apply hidden;
-    }
-  }
-
   /* The "Know More" link, with the arrow that slides on hover. */
   .link-arrow {
     @apply inline-flex items-center gap-3 font-display text-[14px] text-white;
@@ -373,8 +281,7 @@
     transition:
       transform 0.45s var(--ease),
       box-shadow 0.45s var(--ease),
-      border-color 0.45s var(--ease),
-      background-color 0.4s var(--ease);
+      border-color 0.45s var(--ease);
   }
 
   .card-hover:hover {
@@ -693,11 +600,6 @@
     overflow-wrap: break-word;
   }
 
-  /* Indigo on near-black is too dark to read; lift the link colour in dark. */
-  [data-theme='dark'] .page-body a {
-    @apply text-[#A5B4FC] decoration-[#A5B4FC]/40 hover:decoration-[#A5B4FC];
-  }
-
   .page-body ul,
   .page-body ol {
     @apply my-4 space-y-2 pl-5;
@@ -722,6 +624,12 @@
 
   .page-body img {
     @apply mx-auto my-2 h-auto max-w-full;
+  }
+
+  /* Pictures that sit side by side: the auto margin above would eat the free
+     space in the flex row and push them to opposite ends. */
+  .page-body .img-row img {
+    @apply m-0;
   }
 
   /* A figure whose source file is gone. See markMissingImages in the content
@@ -797,15 +705,6 @@
     @apply my-2;
   }
 
-  /*
-   * The diagrams are flat PNGs exported on white. Left alone they burn a hole
-   * in a dark page, so they sit on their own white plate with a hairline —
-   * the figure reads as a printed sheet laid on the page.
-   */
-  [data-theme='dark'] .page-body figure img,
-  [data-theme='dark'] .page-body .table-wrap img {
-    @apply bg-white;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -27,11 +27,16 @@ export type Block =
       rows: { head: boolean; cells: { html: string; rowSpan?: number; colSpan?: number }[] }[];
     }
   /**
-   * A figure. `row` marks one that sat in a carousel on the old site — the
-   * vendor logos on the Billing Solutions page — so consecutive ones render
-   * side by side rather than stacked.
+   * A figure. `row` marks one the old page showed beside its neighbours, so
+   * consecutive ones render side by side rather than stacked:
+   *
+   *   'carousel' — vendor logos from a slider (Billing Solutions). Different
+   *                marks, normalised to one height so the strip reads evenly.
+   *   'column'   — separate Elementor columns of one row (the book covers and
+   *                the tool logos on SMS Gateway). Shown at their own size,
+   *                because these are pictures rather than a logo set.
    */
-  | { t: 'img'; src: string; alt: string; row?: boolean }
+  | { t: 'img'; src: string; alt: string; row?: 'carousel' | 'column' }
   /** A link rendered as a button. */
   | { t: 'cta'; label: string; href: string };
 

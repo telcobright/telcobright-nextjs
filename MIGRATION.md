@@ -207,14 +207,13 @@ two branches — `migrate:verify` reports *no word lost* on both — and the bra
 colours, the gradient and the two typefaces are untouched. What changes is the
 philosophy:
 
-1. **Two themes, one set of classes.** Every surface, text and hairline colour
-   is a CSS custom property, so `bg-surface` and `text-ink-900` mean the right
-   thing in both. Light is the old site's palette to the digit; dark was chosen
-   rather than inverted — the greys keep the warm cast of the brand brown, and
-   body text sits around 11:1 instead of pure white, which glares. The theme
-   follows the system until you touch the switch in the header, and a blocking
-   inline script applies the stored choice before first paint, so there is no
-   flash of the wrong background.
+1. **One palette, one home.** Every surface, text and hairline colour is a CSS
+   custom property in `globals.css` rather than a literal scattered through the
+   components, so `bg-surface` and `text-ink-900` resolve from a single place.
+   The values are the old site's to the digit. (A dark theme was built on top
+   of this and then removed on request; the token layer it needed is worth
+   keeping on its own, and it is what makes a second palette a half-hour job
+   rather than a rewrite.)
 2. **Ambient light instead of flat fill.** An aurora — two heavily blurred
    blobs in the brand stops on long offset orbits — sits behind every dark
    band, under a film-grain layer generated from an inline SVG turbulence
@@ -237,9 +236,9 @@ philosophy:
    with the display type.
 
 Verified on the branch: build and typecheck clean, `migrate:verify` green on all
-nine pages, 112 image URLs all 200, and 72 layout checks — 12 routes ×
-390 / 768 / 1280px × light and dark — with no horizontal scroll and the theme
-correctly applied in every one.
+nine pages, 112 image URLs all 200, and 36 layout checks — every route at
+390 / 768 / 1280px, each loaded for real and measured over the DevTools
+protocol — with no horizontal scroll anywhere.
 
 ## Kept exactly as the old site has it
 
@@ -317,6 +316,14 @@ broken:
 - **Quick Navigation.** The Elementor table-of-contents widget never finishes
   loading on any solution page — it renders a spinner forever. Here it is a real
   table of contents that lists the page's headings and tracks scroll position.
+- **Figures that sat side by side.** Elementor put some pictures in separate
+  columns of one row — the two book covers and the tool logos on the SMS
+  Gateway page. The extractor only recognised carousel images as a row, so
+  everything else came down as a stack of small pictures one per line. It now
+  also recognises a column that holds a single picture and nothing else beside
+  a sibling that does the same, and those render as a row again. (The files
+  themselves are fine, and small on purpose: `Image_008-1.jpg` is a 97×128
+  book cover, which is what WordPress held.)
 - **Merged table cells.** Four tables on the SMS Gateway page use `rowspan` and
   `colspan`. An early pass of the extractor dropped both, which left those rows
   one or two cells short and the tables visibly broken. The spans now survive

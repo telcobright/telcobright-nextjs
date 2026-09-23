@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { headerNav, site } from '@content/site';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { media } from '@/lib/media';
 import { cn } from '@/lib/cn';
 
@@ -157,12 +156,9 @@ export function Header() {
             <SocialIcon href={site.social.facebook} label="Facebook" d={FACEBOOK} />
             <SocialIcon href={site.social.linkedin} label="LinkedIn" d={LINKEDIN} />
             <SocialIcon href={site.contact.mailto} label="Email us" d={MAIL} />
-            <span aria-hidden="true" className="mx-1 h-5 w-px bg-white/15" />
-            <ThemeToggle />
           </div>
 
           <div className="flex items-center gap-1 lg:hidden">
-            <ThemeToggle />
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}

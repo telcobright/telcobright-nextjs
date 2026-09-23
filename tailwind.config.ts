@@ -12,8 +12,8 @@ import type { Config } from 'tailwindcss';
  *
  * The brand colours, the gradient and the two typefaces are fixed. Everything
  * that describes a *surface* — page background, text, hairlines, shadows — is a
- * CSS custom property rather than a literal, because the site now has two
- * themes. The light values are the ones above; `globals.css` holds both sets.
+ * CSS custom property rather than a literal, so the palette has one home
+ * (`globals.css`) instead of being spread across the components.
  *
  * Channels are stored as bare `R G B` triplets so Tailwind's `<alpha-value>`
  * keeps working: `bg-surface/70` and `border-ink-200/60` behave exactly as they
@@ -23,7 +23,6 @@ const themed = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}', './content/**/*.{ts,tsx}'],
-  darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
@@ -61,7 +60,7 @@ const config: Config = {
           DEFAULT: themed('--surface'),
           subtle: themed('--surface-subtle'),
           muted: themed('--surface-muted'),
-          /** The near-black product tile. Dark in both themes, by design. */
+          /** The near-black product tile. */
           card: themed('--surface-card'),
           dark: themed('--surface-dark'),
           darker: '#000000',
@@ -82,7 +81,7 @@ const config: Config = {
         'brand-hairline':
           'linear-gradient(90deg, transparent, rgba(234,88,12,.7), rgba(79,70,229,.7), transparent)',
       },
-      /* Each theme defines its own depth; see `--shadow-*` in globals.css. */
+      /* The depth scale lives in `--shadow-*` in globals.css. */
       boxShadow: {
         soft: 'var(--shadow-soft)',
         card: 'var(--shadow-card)',
