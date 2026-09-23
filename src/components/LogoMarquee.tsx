@@ -23,11 +23,11 @@ export function LogoMarquee({ logos }: { logos: readonly Logo[] }) {
       {/* Feathered edges, so logos fade out rather than being chopped off. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white to-transparent sm:w-28"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-surface to-transparent sm:w-28"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white to-transparent sm:w-28"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-surface to-transparent sm:w-28"
       />
 
       <div className="logo-marquee__track">
@@ -57,7 +57,7 @@ function LogoRow({
             them makes a genuine client list look like filler. A chip gives the
             row structure so mixed colours still read as one strip.
           */}
-          <span className="flex h-[88px] w-[176px] items-center justify-center rounded-2xl border border-ink-200/70 bg-white px-5 shadow-soft transition-all duration-500 ease-out-expo hover:-translate-y-1 hover:border-ink-200 hover:shadow-card">
+          <span className="flex h-[88px] w-[176px] items-center justify-center rounded-2xl border border-ink-200/70 bg-surface px-5 shadow-soft transition-all duration-500 ease-out-expo hover:-translate-y-1 hover:border-ink-200 hover:shadow-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={media(logo.image)}

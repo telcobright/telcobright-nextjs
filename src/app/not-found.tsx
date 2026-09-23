@@ -6,7 +6,7 @@ export default function NotFound() {
     <>
       <PageHero eyebrow="404" title="We couldn’t find that page" />
 
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container-page max-w-xl">
           <p className="lede">
             The link may be out of date. Try the product index, or email us and we&rsquo;ll point

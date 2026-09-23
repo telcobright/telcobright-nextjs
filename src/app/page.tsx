@@ -14,8 +14,10 @@ import {
   testimonials,
 } from '@content/home';
 import { site } from '@content/site';
+import { Aurora } from '@/components/Aurora';
 import { Faq } from '@/components/Faq';
 import { LogoMarquee } from '@/components/LogoMarquee';
+import { Spotlight } from '@/components/Spotlight';
 import { Testimonials as TestimonialCarousel } from '@/components/Testimonials';
 import { ArrowRight, Eyebrow, GradientHeading, SectionHeader } from '@/components/ui';
 import { media } from '@/lib/media';
@@ -52,22 +54,20 @@ function Hero() {
       style={{ backgroundImage: `url(${media(hero.background)})` }}
     >
       {/*
-        Two blurred blobs in the brand stops, plus a scrim that darkens the left
-        third. The photograph behind the headline is busy; without the scrim the
-        white type sat on whatever happened to be under it.
+        Aurora over the photograph, then a scrim that darkens the left third.
+        The photograph is busy; without the scrim the white type sat on
+        whatever happened to be under it.
       */}
-      <span aria-hidden="true" className="glow -left-40 top-[-10%] h-[520px] w-[520px] bg-grad-from opacity-20" />
-      <span aria-hidden="true" className="glow -bottom-40 right-[10%] h-[460px] w-[460px] bg-grad-to opacity-[0.18]" />
+      <Aurora intensity="bold" />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(0,0,0,.72)_0%,rgba(0,0,0,.35)_42%,rgba(0,0,0,0)_78%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(0,0,0,.74)_0%,rgba(0,0,0,.38)_42%,rgba(0,0,0,0)_78%)]"
       />
 
       <div className="container-page relative pb-24 pt-36 lg:pb-32 lg:pt-44">
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_minmax(0,550px)]">
           <div>
-            <p className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 font-display text-[11px] uppercase tracking-[1.4px] text-white/80 backdrop-blur-sm">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brand-gradient" />
+            <p className="eyebrow eyebrow-light rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 backdrop-blur-sm">
               {hero.eyebrow}
             </p>
 
@@ -88,35 +88,37 @@ function Hero() {
 
           {/*
             The appointment card. Glass rather than the old opaque panel: the
-            hero photograph carries on behind it, which is what ties the two
-            halves of the band together.
+            hero photograph and the aurora carry on behind it, which is what
+            ties the two halves of the band together.
           */}
-          <div className="group relative rounded-2xl border border-white/10 bg-white/[0.06] p-5 shadow-lift backdrop-blur-xl transition-transform duration-500 ease-out-expo hover:-translate-y-1">
-            <div className="overflow-hidden rounded-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={media(heroCard.image)}
-                alt={heroCard.imageAlt}
-                className="aspect-[16/10] w-full object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]"
-              />
+          <Spotlight className="edge-lit group rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-lift backdrop-blur-xl transition-transform duration-500 ease-out-expo hover:-translate-y-1">
+            <div className="relative z-[2]">
+              <div className="overflow-hidden rounded-2xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={media(heroCard.image)}
+                  alt={heroCard.imageAlt}
+                  className="aspect-[16/10] w-full object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-7">
+                <span className="font-display text-[15px] font-bold text-white">{heroCard.greeting}</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={media(heroCard.greetingIcon)} alt="" width={18} height={18} className="h-[18px] w-[18px]" />
+              </div>
+
+              <h2 className="mt-2 font-display text-[22px] font-bold capitalize leading-[1.2] tracking-[-.5px] text-white sm:text-[26px]">
+                {heroCard.title}
+              </h2>
+
+              <a href={heroCard.cta.href} className="btn-light mt-6 px-5 py-3 text-[12px] uppercase tracking-[.5px]">
+                {heroCard.cta.label}
+              </a>
+
+              <p className="mt-5 text-[13px] text-white/55">{heroCard.note}</p>
             </div>
-
-            <div className="flex items-center gap-2 pt-7">
-              <span className="font-display text-[15px] font-bold text-white">{heroCard.greeting}</span>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={media(heroCard.greetingIcon)} alt="" width={18} height={18} className="h-[18px] w-[18px]" />
-            </div>
-
-            <h2 className="mt-2 font-display text-[22px] font-bold capitalize leading-[1.2] tracking-[-.5px] text-white sm:text-[26px]">
-              {heroCard.title}
-            </h2>
-
-            <a href={heroCard.cta.href} className="btn-light mt-6 px-5 py-3 text-[12px] uppercase tracking-[.5px]">
-              {heroCard.cta.label}
-            </a>
-
-            <p className="mt-5 text-[13px] text-white/55">{heroCard.note}</p>
-          </div>
+          </Spotlight>
         </div>
       </div>
 
@@ -129,7 +131,7 @@ function Hero() {
 
 function Clients() {
   return (
-    <section aria-labelledby="clients-title" className="section-tight border-b border-ink-200/70 bg-white">
+    <section aria-labelledby="clients-title" className="section-tight border-b border-ink-200/70 bg-surface">
       <div className="container-page">
         <div className="flex items-center gap-5">
           <span aria-hidden="true" className="hidden h-px flex-1 bg-gradient-to-r from-transparent to-ink-200 sm:block" />
@@ -155,7 +157,7 @@ function Clients() {
 
 function Products() {
   return (
-    <section id="products" className="bg-white pb-[clamp(4rem,2.75rem+4vw,7rem)] pt-[clamp(3rem,2rem+3vw,5rem)]">
+    <section id="products" className="bg-surface pb-[clamp(4rem,2.75rem+4vw,7rem)] pt-[clamp(3rem,2rem+3vw,5rem)]">
       <div className="container-page">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="lg:sticky lg:top-[calc(var(--header-h)+3rem)] lg:self-start lg:pt-4">
@@ -170,23 +172,25 @@ function Products() {
           <ul className="space-y-5" data-reveal-children>
             {products.map((product, i) => (
               <li key={product.href}>
-                <article
+                <Spotlight
                   data-surface="dark"
-                  className="card-dark group h-full p-8 sm:p-10"
+                  className="card-dark edge-lit group h-full"
                   style={{
                     backgroundImage: `url(${media('2024/06/tb_bg.png')})`,
                     backgroundPosition: i % 2 === 0 ? '0% 0%' : '100% 100%',
                   }}
                 >
-                  <h3 className="font-display text-[20px] font-medium tracking-[-.5px] sm:text-[24px]">
-                    <span className="text-gradient">{product.title}</span>
-                  </h3>
-                  <p className="mt-4 text-[15px] leading-relaxed text-white/65">{product.body}</p>
-                  <Link href={product.href} className="link-arrow mt-6 hover:text-white">
-                    Know More
-                    <ArrowRight />
-                  </Link>
-                </article>
+                  <article className="relative z-[2] p-8 sm:p-10">
+                    <h3 className="font-display text-[20px] font-medium tracking-[-.5px] sm:text-[24px]">
+                      <span className="text-gradient">{product.title}</span>
+                    </h3>
+                    <p className="mt-4 text-[15px] leading-relaxed text-white/65">{product.body}</p>
+                    <Link href={product.href} className="link-arrow mt-6 hover:text-white">
+                      Know More
+                      <ArrowRight />
+                    </Link>
+                  </article>
+                </Spotlight>
               </li>
             ))}
           </ul>
@@ -204,12 +208,12 @@ function Additional() {
       {/* The live section is cut on a diagonal at the top and bottom. */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 -top-px h-24 bg-white"
+        className="absolute inset-x-0 -top-px h-24 bg-surface"
         style={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 100%)' }}
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 -bottom-px h-24 bg-white"
+        className="absolute inset-x-0 -bottom-px h-24 bg-surface"
         style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%, 100% 100%)' }}
       />
 
@@ -219,21 +223,32 @@ function Additional() {
           <GradientHeading parts={additional.titleParts} className="mt-3" />
         </div>
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={media(additional.image)}
-          alt={additional.imageAlt}
-          className="mx-auto mt-10 h-auto w-full max-w-4xl"
-          data-reveal
-        />
+        {/*
+          Bento: the product shot is a tile of its own, two wide and two tall,
+          and the six services fill in around it. One grid, unequal weights —
+          rather than a picture with a list of identical cards bolted beneath.
+        */}
+        <ul className="bento mt-12" data-reveal-children>
+          <li className="span-2-tall card flex items-center justify-center overflow-hidden p-6 sm:p-8">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={media(additional.image)}
+              alt={additional.imageAlt}
+              className="h-auto w-full object-contain"
+            />
+          </li>
 
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-children>
-          {additional.services.map((service) => (
+          {additional.services.map((service, i) => (
             <li
               key={service.title}
-              className="group flex gap-4 rounded-2xl p-5 transition-all duration-500 ease-out-expo hover:-translate-y-0.5 hover:bg-white hover:shadow-card"
+              className={cn(
+                'card card-hover group flex flex-col gap-4 p-6',
+                /* Four tiles sit beside the picture; whatever is left over
+                   widens to fill the last row rather than leaving a hole. */
+                i >= 4 && 'lg:col-span-2'
+              )}
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200/70 bg-white shadow-soft transition-colors duration-500 group-hover:border-grad-to/30">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200/70 bg-surface-subtle shadow-soft transition-colors duration-500 group-hover:border-grad-to/30">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={media(service.icon)} alt="" width={26} height={26} className="h-[26px] w-[26px]" />
               </span>
@@ -253,14 +268,15 @@ function Additional() {
 
 function Highlights() {
   return (
-    <section className="section bg-white">
+    <section className="section bg-surface">
       <div className="container-page space-y-6 lg:space-y-8">
         {highlights.map((item) => (
           <article
             key={item.image}
             data-reveal
-            className="group overflow-hidden rounded-4xl ring-1 ring-ink-900/[0.04]"
-            style={{ backgroundImage: 'linear-gradient(110deg, #E9E3F4 0%, #F4E6EC 45%, #FBF5EF 100%)' }}
+            className="group overflow-hidden rounded-4xl ring-1 ring-ink-900/[0.06]"
+            /* The pastel wash has a dark counterpart; both live on the token. */
+            style={{ backgroundImage: 'var(--highlight-card)' }}
           >
             <div
               className={cn(
@@ -302,7 +318,7 @@ function Testimonials() {
   if (testimonials.items.length === 0) return null;
 
   return (
-    <section id="testimonials" className="section bg-white">
+    <section id="testimonials" className="section bg-surface">
       <div className="container-page">
         <SectionHeader eyebrow={testimonials.eyebrow} parts={testimonials.titleParts} />
         <TestimonialCarousel items={testimonials.items} />
@@ -334,7 +350,7 @@ function Gallery() {
             <li
               key={img.image}
               className={cn(
-                'group relative overflow-hidden rounded-2xl bg-ink-200 ring-1 ring-ink-900/5 transition-shadow duration-500 ease-out-expo hover:shadow-lift',
+                'group relative overflow-hidden rounded-2xl bg-ink-100 ring-1 ring-ink-900/5 transition-shadow duration-500 ease-out-expo hover:shadow-lift',
                 img.wide && 'col-span-2'
               )}
             >
@@ -370,7 +386,7 @@ function Gallery() {
 
 function FaqSection() {
   return (
-    <section id="faq" className="section scroll-mt-24 bg-white">
+    <section id="faq" className="section scroll-mt-24 bg-surface">
       <div className="container-page">
         <SectionHeader eyebrow={faq.eyebrow} parts={faq.titleParts} />
         <Faq items={faq.items} />

@@ -3,6 +3,7 @@ import { DM_Sans, Inter } from 'next/font/google';
 import { site } from '@content/site';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { themeScript } from '@/lib/theme';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -39,15 +40,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${inter.variable}`}>
-      {/*
-        Extensions write their own attributes onto <body> before React
-        hydrates — Grammarly adds data-gr-ext-installed, password managers do
-        the same — which React reports as a hydration mismatch. This silences
-        that for this element's own attributes only; a mismatch anywhere inside
-        the tree is still reported.
-      */}
+    /*
+      suppressHydrationWarning on <html> because the theme script below writes
+      data-theme onto it before React sees the document, and on <body> because
+      extensions write their own attributes there — Grammarly adds
+      data-gr-ext-installed, password managers do the same. It covers each
+      element's own attributes only; a mismatch anywhere inside the tree is
+      still reported.
+    */
+    <html lang="en" className={`${dmSans.variable} ${inter.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
+        {/*
+          Blocking, and first: it puts the saved theme on <html> before the
+          first paint, so there is no flash of the wrong background. See
+          src/lib/theme.ts.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-brand-gradient focus:px-5 focus:py-2.5 focus:font-display focus:text-sm focus:font-medium focus:text-white focus:shadow-glow"

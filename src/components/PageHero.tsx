@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Aurora } from '@/components/Aurora';
 import { media } from '@/lib/media';
 
 /**
@@ -33,8 +34,7 @@ export function PageHero({
         className="pointer-events-none absolute inset-0 opacity-30"
         style={{ backgroundImage: `url(${media('2024/06/tb_bg.png')})`, backgroundPosition: '100% 0%' }}
       />
-      <span aria-hidden="true" className="glow -left-24 -top-24 h-[360px] w-[360px] bg-grad-from opacity-[0.16]" />
-      <span aria-hidden="true" className="glow -bottom-32 right-[5%] h-[320px] w-[320px] bg-grad-to opacity-[0.16]" />
+      <Aurora intensity="soft" />
 
       <div className="container-page relative pb-16 pt-32 lg:pb-20 lg:pt-36">
         {breadcrumb && (

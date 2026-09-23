@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { headerNav, site } from '@content/site';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { media } from '@/lib/media';
 import { cn } from '@/lib/cn';
 
@@ -156,26 +157,37 @@ export function Header() {
             <SocialIcon href={site.social.facebook} label="Facebook" d={FACEBOOK} />
             <SocialIcon href={site.social.linkedin} label="LinkedIn" d={LINKEDIN} />
             <SocialIcon href={site.contact.mailto} label="Email us" d={MAIL} />
+            <span aria-hidden="true" className="mx-1 h-5 w-px bg-white/15" />
+            <ThemeToggle />
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 text-white transition-colors hover:bg-white/10 lg:hidden"
-          >
-            <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              {open ? (
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              ) : (
-                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center gap-1 lg:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 text-white transition-colors hover:bg-white/10"
+            >
+              <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                {open ? (
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                ) : (
+                  <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/*
+        Reading progress, driven by the document scroll itself — see
+        `.scroll-progress` in globals.css. No listener, no state.
+      */}
+      <div aria-hidden="true" className="scroll-progress absolute inset-x-0 bottom-0" />
 
       {open && (
         <div id="mobile-nav" className="animate-panel-in lg:hidden">
