@@ -140,10 +140,19 @@ export default async function SiteSettingsPage() {
           </div>
         </Panel>
 
-        <Panel title="Newsletter panel" description="The band at the top of the footer.">
+        <Panel title="Footer panel" description="The band at the top of the footer, above the columns.">
           <Field label="Heading" name="newsletterTitle" defaultValue={site.newsletter.title} />
           <div className="mt-5">
             <TextArea label="Body" name="newsletterBody" defaultValue={site.newsletter.body} rows={3} />
+          </div>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+            <Field
+              label="Button label"
+              name="newsletterCtaLabel"
+              defaultValue={site.newsletter.cta?.label ?? ''}
+              hint="Leave empty to show no button."
+            />
+            <Field label="Button link" name="newsletterCtaHref" defaultValue={site.newsletter.cta?.href ?? ''} />
           </div>
         </Panel>
 

@@ -37,7 +37,12 @@ export function Footer({ site }: { site: SiteContent }) {
           <h2 className="max-w-2xl font-display text-[26px] font-bold leading-tight tracking-[-1px] text-white sm:text-[32px]">
             {newsletter.title}
           </h2>
-          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/75">{newsletter.body}</p>
+          <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-white/75">{newsletter.body}</p>
+          {newsletter.cta?.label && (
+            <Link href={newsletter.cta.href} className="btn-light mt-7">
+              {newsletter.cta.label}
+            </Link>
+          )}
         </div>
 
         {/* Columns */}

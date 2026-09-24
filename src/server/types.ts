@@ -48,7 +48,8 @@ export interface SiteContent {
   copyright: string;
   headerNav: NavItem[];
   footerNav: { title: string; links: LinkRef[] }[];
-  newsletter: { title: string; body: string };
+  /** The panel at the top of the footer. */
+  newsletter: { title: string; body: string; cta: LinkRef };
 }
 
 export interface Testimonial {

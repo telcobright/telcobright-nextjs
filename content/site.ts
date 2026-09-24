@@ -94,7 +94,16 @@ export const footerNav = [
 ] as const;
 
 /** The newsletter panel above the footer columns. */
+/**
+ * The panel at the top of the footer.
+ *
+ * The old site headed this "Subscribe Our Newsletter" over lorem ipsum, with
+ * no email field and no endpoint behind it — a heading over nothing. It now
+ * asks for the thing the business actually wants. Edit it at /admin/site.
+ */
 export const newsletter = {
-  title: 'Subscribe Our Newsletter',
-  body: 'Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.',
+  title: 'Planning a platform? Talk to our engineers.',
+  body:
+    "Tell us what you're building — SMS, billing, interconnect or voice — and we'll come back with how we'd approach it. Usually within a few hours.",
+  cta: { label: 'Start a conversation', href: '/contact' },
 };
