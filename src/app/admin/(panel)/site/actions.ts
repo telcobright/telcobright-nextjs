@@ -63,6 +63,10 @@ export async function saveSiteAction(formData: FormData): Promise<void> {
     newsletter: {
       title: str(formData, 'newsletterTitle'),
       body: text(formData, 'newsletterBody'),
+      cta: {
+        label: str(formData, 'newsletterCtaLabel'),
+        href: str(formData, 'newsletterCtaHref') || '/contact',
+      },
     },
     headerNav: headerNav.filter((item) => item.label),
     footerNav: footerNav.filter((col) => col.title),

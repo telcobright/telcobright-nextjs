@@ -25,7 +25,27 @@ const NEW = process.env.SITE_URL ?? 'http://localhost:3100';
  * bug being waved through — everything else must still match the old site word
  * for word.
  */
+/**
+ * Words the rebuilt site deliberately does not render.
+ *
+ * `*` applies to every page — the footer is on all of them. Anything not
+ * listed here still fails the run: an exception has to be a decision someone
+ * wrote down, not a quiet pass.
+ */
 const ALLOWED = {
+  '*': {
+    words: [
+      'subscribe', 'our', 'newsletter',
+      // The Latin filler that stood under it.
+      'aenean', 'imperdiet', 'etiam', 'ultricies', 'nisi', 'vel', 'augue',
+      'curabitur', 'ullamcorper', 'nam', 'eget', 'dui',
+    ],
+    why:
+      'The footer panel said "Subscribe Our Newsletter" over lorem ipsum and ' +
+      'no form — the old site had no subscribe field and no endpoint behind ' +
+      'it. It now asks for the thing the business actually wants, a ' +
+      'conversation, and links to the contact page. Edit it at /admin/site.',
+  },
   '/': {
     words: ['testimonials', 'explore', 'our', 'clients', 'review'],
     why:
@@ -143,8 +163,7 @@ for (const [file, route] of PAGES) {
   const stage1 = route === '/' ? [] : deficit(live, blk);
   const stage2 = deficit(live, nw);
 
-  const allowed = ALLOWED[route];
-  const allowedWords = new Set(allowed?.words ?? []);
+  const allowedWords = new Set([...(ALLOWED['*']?.words ?? []), ...(ALLOWED[route]?.words ?? [])]);
   const unexplained = stage2.filter(([w]) => !allowedWords.has(w));
 
   const ok = unexplained.length === 0;
@@ -154,7 +173,13 @@ for (const [file, route] of PAGES) {
   );
   if (stage1.length) console.log('       extraction dropped:', JSON.stringify(stage1.slice(0, 15)));
   if (unexplained.length) console.log('       rendering missing :', JSON.stringify(unexplained.slice(0, 25)));
-  if (allowed && stage2.length) console.log('       by design         :', allowed.why);
+  if (stage2.length) {
+    for (const entry of [ALLOWED['*'], ALLOWED[route]]) {
+      if (entry && stage2.some(([w]) => entry.words.includes(w))) {
+        console.log('       by design         :', entry.why);
+      }
+    }
+  }
 }
 
 console.log(bad === 0 ? '\nAll pages: no word lost.' : `\n${bad} page(s) with missing words.`);

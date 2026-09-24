@@ -218,10 +218,8 @@ change if you want it fixed — say which.
    all point at `#`. Edit `footerNav` in `content/site.ts`.
 4. ~~**Three empty sections.**~~ These were filled in — see *Three empty
    sections, filled* below.
-5. **The newsletter body is untranslated lorem ipsum.** *"Aenean imperdiet.
-   Etiam ultricies nisi vel augue…"*, in `content/site.ts`. There is also no
-   subscribe endpoint behind it, which is why there is no form — matching the
-   live page.
+5. ~~**The newsletter body is untranslated lorem ipsum.**~~ Replaced — see
+   *The footer panel* below.
 6. **The Medium icon links nowhere.** Set `site.social.medium` and it becomes a
    link.
 7. **Typos in headings.** *"About Telcobrigtht SMS Platform"*, *"Dynamic least
@@ -283,6 +281,14 @@ broken:
   a sibling that does the same, and those render as a row again. (The files
   themselves are fine, and small on purpose: `Image_008-1.jpg` is a 97×128
   book cover, which is what WordPress held.)
+- **The footer panel.** It read *"Subscribe Our Newsletter"* over four
+  sentences of lorem ipsum — *"Aenean imperdiet. Etiam ultricies nisi vel
+  augue…"* — with no email field and no endpoint behind it, on the live site
+  as much as here. A heading promising a newsletter that cannot be subscribed
+  to is worse than no panel, so it now asks for what the business actually
+  wants: *"Planning a platform? Talk to our engineers."*, with a button to the
+  contact page. `migrate:verify` declares the removed Latin rather than
+  quietly passing. Edit the words, or take the button away, at `/admin/site`.
 - **Merged table cells.** Four tables on the SMS Gateway page use `rowspan` and
   `colspan`. An early pass of the extractor dropped both, which left those rows
   one or two cells short and the tables visibly broken. The spans now survive
