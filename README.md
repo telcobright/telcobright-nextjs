@@ -207,9 +207,9 @@ everything above it goes through that one module.
 
 `MIGRATION.md` covers three things that need a decision from you:
 
-- **The legacy WordPress install is compromised** — injected spam posts, a hijacked
-  sitemap feeding a doorway-page campaign to Google under this domain, and a deleted
-  uploads folder. Credentials need rotating whatever happens to this project.
+- **The legacy WordPress install needs a security review** and its credentials
+  rotated before any cutover. Details are in `SECURITY-NOTE.md` in the working copy,
+  kept out of this repository because it is public.
 - **80 images were recovered from a staging host** because they are 404 on
   telcobright.com today — every SMS Gateway diagram and all 48 Billing Solutions
   screenshots. This repo is currently the second copy of them.

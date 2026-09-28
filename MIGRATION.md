@@ -81,37 +81,16 @@ document the SMS Gateway page was built from; it 404s on every host. That slot
 renders as a labelled placeholder that keeps its position in the document — drop
 the file into `public/media/2023/03/` and it becomes a normal figure again.
 
-## ⚠️ The live WordPress install is compromised
+## The legacy WordPress install needs attention
 
-This turned up while inventorying content, and it matters more than the
-migration:
+Before any DNS cutover, the old install needs its credentials rotated and a
+security review — it has problems of its own that have nothing to do with this
+migration, and none of them carried over here. Only the legitimate pages were
+migrated.
 
-- **Injected spam posts.** All 13 "posts" in the database are spam — Russian
-  betting sites (1xbet, Pin-Up), "Immediate Edge" crypto-scam reviews, and
-  generic ebook filler. They created spam categories and tags too
-  (`1xbet-russian-top`, `pin-up`, `immediate`).
-- **A hijacked sitemap.** `https://telcobright.com/wp-sitemap.xml` serves
-  thousands of auto-parts affiliate URLs such as
-  `/Dorman-748-129-Front-Driver-Side-Power-Window-Regulator-Motor/597135`, each
-  with today's date and `changefreq: daily` — a doorway-page campaign running
-  under your domain and being fed to Google.
-- **A captured Wordfence block page** is saved as a post (*"Your access to this
-  site has been limited by the site owner"*), which is what an attacker's
-  session looks like when it gets saved into the database.
-- **Missing uploads.** The whole `2023/03` folder is gone, as above.
-
-None of this carried over. Only the legitimate pages were migrated.
-
-**Worth doing on the WordPress side, whatever happens with this project:**
-
-1. Rotate every WordPress, hosting, database and FTP/SSH credential.
-2. Look for unexpected admin users, and for recently modified files in
-   `wp-content/uploads`, `wp-content/plugins` and `mu-plugins`.
-3. In Google Search Console, submit a removal request for the spam URL patterns
-   and resubmit a clean sitemap once the new site is live.
-4. Make the old host return **410 Gone** for the spam URL patterns rather than
-   404 — Google drops 410s faster.
-5. Keep the old install offline once you cut over.
+The findings are deliberately not in this repository, which is public. They
+are in `SECURITY-NOTE.md` in the working copy; pass that to whoever administers
+the old host.
 
 ## URL map
 
