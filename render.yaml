@@ -1,0 +1,55 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Deploy from this file: Render dashboard → New → Blueprint → pick this repo.
+# Everything below is read from here, so the service can be recreated exactly.
+#
+# ─── The one thing to decide ────────────────────────────────────────────────
+# The `disk` at the bottom is what makes /data survive a restart: the content
+# saved from the admin, the job posts, the applications and the CVs. Render
+# only attaches disks to *paid* instances — on the free plan a service gets a
+# fresh, empty filesystem on every deploy and every wake from sleep.
+#
+#   plan: starter + disk   → everything works, content and CVs persist
+#   plan: free,  no disk   → fine for a demo; every edit and every CV is lost
+#                            on the next deploy or sleep. Delete the `disk:`
+#                            block and change `plan:` to `free` if you want it.
+#
+# There is a third way that keeps the free plan honest: move the store off the
+# filesystem onto a hosted database and object storage. That is a rewrite of
+# src/server/store.ts alone — nothing above it touches the disk directly.
+
+services:
+  - type: web
+    name: telcobright-web
+    runtime: node
+    plan: starter
+    region: singapore # nearest to Dhaka of Render's regions
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+
+    envVars:
+      # Signs the admin session cookie. Generated once by Render and kept
+      # across deploys; without it the app writes a key into /data instead,
+      # which would not survive a redeploy on the free plan.
+      - key: AUTH_SECRET
+        generateValue: true
+
+      # Where content, job posts, applications and uploads live. Must match
+      # the disk mount below.
+      - key: DATA_DIR
+        value: /var/data
+
+      # Next 16 needs >= 20.9. 22 is the current LTS.
+      - key: NODE_VERSION
+        value: "22"
+
+      - key: NODE_ENV
+        value: production
+
+    # Remove this block to run on the free plan (see the note at the top).
+    disk:
+      name: telcobright-data
+      mountPath: /var/data
+      sizeGB: 1

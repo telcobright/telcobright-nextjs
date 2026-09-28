@@ -187,20 +187,46 @@ that flag will happily push a major version bump on you.
 
 ## Deploying
 
-Run it on a Node host with a persistent disk — a VPS, a container with a volume, App
-Platform, Render, Fly. The public pages are prerendered and the admin is dynamic, so the
-only requirement is that `/data` survives a restart and is backed up.
+The site needs a **Node host with a persistent disk**. It is not static: the
+admin, the careers application form, the CV uploads and the legacy 301s all
+need a server. GitHub Pages cannot host it — `output: 'export'` fails the
+build outright.
+
+### Render (configured)
+
+`render.yaml` in the repo root describes the whole service. In the Render
+dashboard: **New → Blueprint → this repo**. It sets the build and start
+commands, generates `AUTH_SECRET`, points `DATA_DIR` at `/var/data` and
+attaches a 1 GB disk there.
+
+**The disk needs a paid instance.** Render attaches disks only to paid
+services; on the free plan the filesystem is wiped on every deploy and every
+wake from sleep, which would take the saved content and every CV with it. So:
+
+| | |
+| --- | --- |
+| `plan: starter` + disk | Everything persists. What the blueprint ships with. |
+| `plan: free`, no disk | Fine for a demo. Delete the `disk:` block. Content edits and CVs are lost on the next deploy. |
+
+### Anywhere else
+
+Any host that runs `npm start` and keeps a directory works — a VPS, a
+container with a volume, Fly, Railway, Coolify, or a machine you already own:
 
 ```bash
 npm ci && npm run build && npm start
 ```
 
-Set `AUTH_SECRET`, and `DATA_DIR` if the data should live outside the checkout.
+Set `AUTH_SECRET`, and `DATA_DIR` if the data should live outside the
+checkout. **Back up whatever `DATA_DIR` points at** — the CVs exist nowhere
+else.
 
-**On Vercel or any serverless host**, the filesystem is read-only and per-invocation, so
-`/data` cannot be used: content saves and CV uploads would vanish. Moving to a hosted
-database and object storage is a rewrite of `src/server/store.ts` and nothing else —
-everything above it goes through that one module.
+### Going fully free
+
+If the site must cost nothing, the filesystem is the only thing in the way.
+Everything that touches disk goes through `src/server/store.ts`, so pointing
+it at a hosted Postgres (Neon, Supabase) and object storage (Cloudflare R2)
+for the uploads is a rewrite of that one module and nothing above it.
 
 ## Read this before going live
 

@@ -1,0 +1,36 @@
+# Typecheck and build every push and pull request.
+#
+# This replaces the old GitHub Pages workflow, which built a static export.
+# The site is no longer static — it has an admin, server actions and file
+# uploads — so it is deployed to a Node host (see render.yaml) and this
+# workflow only proves the tree is sound.
+#
+# `npm run migrate:verify` is deliberately not here: it compares the rendered
+# pages against the saved WordPress HTML in .migration/, which is not
+# committed. Run it locally after touching the content pipeline.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
