@@ -26,7 +26,7 @@ export default async function ContactPage() {
     <>
       <PageHero title="Contact" breadcrumb="Contact" />
 
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container-page grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
           <div>
             <GradientHeading

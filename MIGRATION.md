@@ -132,7 +132,7 @@ sampled off the live render, not eyeballed:
 Elementor, JetKit and MetForm markup, CSS and JS are gone; roughly 2 MB of
 render-blocking assets with them. The pages are static HTML.
 
-### The refresh
+### The refresh (on `main`)
 
 A later pass modernised how those pieces are *drawn*, without touching what they
 say. It is presentation only — no copy was added, removed or reworded, and
@@ -177,6 +177,47 @@ say. It is presentation only — no copy was added, removed or reworded, and
 Verified after the refresh: build and typecheck clean, `migrate:verify` green on
 all nine pages, 112 image URLs all 200, and no horizontal scroll across 12
 routes × 390 / 768 / 1280px.
+
+### The `design-2026` branch
+
+`main` holds the design above. The `design-2026` branch takes the same content
+and the same brand somewhere current. Nothing in `content/` differs between the
+two branches — `migrate:verify` reports *no word lost* on both — and the brand
+colours, the gradient and the two typefaces are untouched. What changes is the
+philosophy:
+
+1. **One palette, one home.** Every surface, text and hairline colour is a CSS
+   custom property in `globals.css` rather than a literal scattered through the
+   components, so `bg-surface` and `text-ink-900` resolve from a single place.
+   The values are the old site's to the digit. (A dark theme was built on top
+   of this and then removed on request; the token layer it needed is worth
+   keeping on its own, and it is what makes a second palette a half-hour job
+   rather than a rewrite.)
+2. **Ambient light instead of flat fill.** An aurora — two heavily blurred
+   blobs in the brand stops on long offset orbits — sits behind every dark
+   band, under a film-grain layer generated from an inline SVG turbulence
+   (about 200 bytes, no request). The grain gives flat areas tooth and dithers
+   the wide gradients so they do not band on an 8-bit display.
+3. **Bento composition.** *Additional Product and solutions* is now one modular
+   grid of unequal tiles — the product shot two wide and two tall, the six
+   services filling in around it — rather than a picture with a row of
+   identical cards bolted underneath.
+4. **Surfaces you can feel.** A lit top edge on the dark tiles, a spotlight
+   that follows the cursor across them (two custom properties written on
+   pointermove; the gradient and the fallback are CSS), deeper radii.
+5. **Motion that reports position.** Reading progress under the header, driven
+   by `animation-timeline: scroll()` — no listener, no state — alongside the
+   scroll reveal already on `main`. Both degrade to nothing where
+   scroll-driven animations are unsupported, and both yield to
+   `prefers-reduced-motion`.
+6. **Labels look like labels.** Eyebrows and column headers share one
+   monospaced, wide-tracked small-caps treatment, so a label never competes
+   with the display type.
+
+Verified on the branch: build and typecheck clean, `migrate:verify` green on all
+nine pages, 112 image URLs all 200, and 36 layout checks — every route at
+390 / 768 / 1280px, each loaded for real and measured over the DevTools
+protocol — with no horizontal scroll anywhere.
 
 ## Kept exactly as the old site has it
 

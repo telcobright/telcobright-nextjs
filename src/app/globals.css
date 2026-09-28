@@ -6,16 +6,53 @@
  * Telcobright — design layer.
  *
  * The brand is unchanged: Inter display over DM Sans body, the orange→indigo
- * gradient on accent words and primary buttons, warm-white sections alternating
- * with the near-black product tiles. What changed in the refresh is how those
- * pieces are drawn — fluid type instead of three breakpoints of fixed sizes, a
- * real depth scale, one easing curve everywhere, and motion that is additive
- * rather than load-bearing.
+ * gradient on accent words and primary buttons, the near-black product tiles.
+ * What this branch changes is the philosophy around them:
+ *
+ *   1. Every surface, text and hairline colour is a custom property, so the
+ *      palette has one home rather than being spread across the components.
+ *   2. Ambient light instead of flat fills — an aurora of brand-coloured light
+ *      behind the dark bands, with film grain so large areas have tooth and
+ *      wide gradients do not band.
+ *   3. Bento composition: unequal tiles on one modular grid rather than rows
+ *      of identical cards.
+ *   4. Surfaces you can feel — a lit top edge, a cursor spotlight, deeper radii.
+ *   5. Motion that reports position (scroll progress, reveal) rather than
+ *      decorating. All of it is CSS, all of it yields to reduced-motion.
  */
 
 @layer base {
   :root {
     color-scheme: light;
+
+    /* -- surfaces -------------------------------------------------------- */
+    --surface: 255 255 255;
+    --surface-subtle: 247 246 244;
+    --surface-muted: 240 239 237;
+    /* The near-black product tile. */
+    --surface-card: 21 13 14;
+    --surface-dark: 11 7 8;
+
+    /* -- text and hairlines ---------------------------------------------- */
+    --ink: 32 15 16;
+    --ink-900: 23 23 23;
+    --ink-700: 63 52 54;
+    --ink-600: 75 85 99;
+    --ink-500: 90 80 81;
+    --ink-400: 107 114 128;
+    --ink-300: 156 163 175;
+    --ink-200: 209 213 219;
+    --ink-100: 243 244 246;
+    --ink-50: 250 250 249;
+
+    /* Tinted with the ink brown rather than black: on a warm white, a black
+       shadow reads grey and dirty. */
+    --shadow-soft: 0 1px 2px rgb(32 15 16 / 0.04), 0 6px 16px -8px rgb(32 15 16 / 0.1);
+    --shadow-card: 0 2px 4px rgb(32 15 16 / 0.03), 0 12px 32px -12px rgb(32 15 16 / 0.16);
+    --shadow-lift: 0 8px 18px -6px rgb(32 15 16 / 0.1), 0 24px 48px -20px rgb(32 15 16 / 0.28);
+
+    /* The pastel band behind the two feature cards. */
+    --highlight-card: linear-gradient(110deg, #e9e3f4 0%, #f4e6ec 45%, #fbf5ef 100%);
 
     /* One curve for everything that moves. Matches transitionTimingFunction. */
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -31,7 +68,7 @@
   }
 
   body {
-    @apply bg-white font-sans text-[16px] leading-[1.6] text-ink-500 antialiased;
+    @apply bg-surface font-sans text-[16px] leading-[1.6] text-ink-500 antialiased;
   }
 
   h1,
@@ -53,9 +90,9 @@
   }
 
   /*
-   * One focus style for the whole site, visible on both the light sections and
-   * the dark ones. `outline` rather than a ring so it follows the element's own
-   * shape and is never clipped by an ancestor's overflow.
+   * One focus style for the whole site, visible on both themes and on the dark
+   * bands. `outline` rather than a ring so it follows the element's own shape
+   * and is never clipped by an ancestor's overflow.
    */
   :focus-visible {
     outline: 2px solid theme('colors.grad.to');
@@ -90,10 +127,13 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Section eyebrow: "WHY CHOOSE US", "TESTIMONIALS", "GALLERY", "FAQ".
-     The gradient dot ties the label back to the heading beneath it. */
+  /*
+   * Micro-label. Eyebrows, table headers and card metadata all use the same
+   * monospaced, wide-tracked small caps, so a label always looks like a label
+   * and never competes with the display type.
+   */
   .eyebrow {
-    @apply inline-flex items-center gap-2 font-display text-[13px] font-medium uppercase tracking-[1.4px] text-ink-400;
+    @apply inline-flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-400;
   }
 
   .eyebrow::before {
@@ -114,7 +154,7 @@
   }
 
   .h-hero {
-    @apply font-display font-bold leading-[1.02] tracking-[-0.025em] text-white;
+    @apply font-display font-bold leading-[1.02] tracking-[-0.03em] text-white;
     font-size: clamp(2.75rem, 1.7rem + 3.6vw, 4.5rem);
   }
 
@@ -169,19 +209,23 @@
   }
 
   .btn-outline {
-    @apply btn border border-ink-200 bg-white text-ink-900 shadow-soft;
+    @apply btn border border-ink-200 bg-surface text-ink-900 shadow-soft;
   }
 
   .btn-outline:hover {
     @apply -translate-y-0.5 border-ink-900 shadow-card;
   }
 
+  /* The inverse button: ink on the page in light, page on the ink in dark.
+     `text-surface` rather than white, or it is white-on-white once the ink
+     token flips. */
   .btn-dark {
-    @apply btn bg-ink-700 text-white shadow-soft;
+    @apply btn bg-ink-900 text-surface shadow-soft;
   }
 
   .btn-dark:hover {
-    @apply -translate-y-0.5 bg-ink-900 shadow-card;
+    @apply -translate-y-0.5 shadow-card;
+    filter: brightness(1.25);
   }
 
   /* Dark sections: a glass outline button that reads on the near-black. */
@@ -232,10 +276,8 @@
 
   /* ------------------------------------------------------------ cards --- */
 
-  /* Light card: a hairline plus a shadow that deepens on hover. The elevation
-     carries the hover state, rather than a border changing colour. */
   .card {
-    @apply rounded-2xl border border-ink-200/70 bg-white shadow-soft;
+    @apply rounded-2xl border border-ink-200/70 bg-surface shadow-soft;
     transition:
       transform 0.45s var(--ease),
       box-shadow 0.45s var(--ease),
@@ -252,7 +294,7 @@
    * instead of the whole tile changing tone.
    */
   .card-dark {
-    @apply relative overflow-hidden rounded-2xl border border-white/5 bg-surface-card;
+    @apply relative overflow-hidden rounded-3xl border border-white/5 bg-surface-card;
     transition:
       transform 0.45s var(--ease),
       box-shadow 0.45s var(--ease),
@@ -261,7 +303,7 @@
 
   .card-dark::before {
     content: '';
-    @apply pointer-events-none absolute inset-0 z-[1] rounded-2xl opacity-0;
+    @apply pointer-events-none absolute inset-0 z-[1] rounded-3xl opacity-0;
     padding: 1px;
     background: linear-gradient(135deg, rgba(234, 88, 12, 0.85), rgba(79, 70, 229, 0.85));
     -webkit-mask:
@@ -284,23 +326,134 @@
     @apply opacity-100;
   }
 
+  /*
+   * A lit top edge. One pixel of light catching the upper rim is what makes a
+   * dark rectangle read as a raised object rather than a hole in the page.
+   */
+  .edge-lit {
+    position: relative;
+  }
+
+  .edge-lit::after {
+    content: '';
+    @apply pointer-events-none absolute inset-x-6 top-0 h-px;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  }
+
+  /*
+   * Cursor spotlight. `--mx`/`--my` are written by the Spotlight component; the
+   * fallback centre keeps the tile looking right before the first mouse move
+   * and on touch, where the layer never becomes visible at all.
+   */
+  .spotlight {
+    --mx: 50%;
+    --my: 0%;
+    position: relative;
+  }
+
+  .spotlight::before {
+    content: '';
+    @apply pointer-events-none absolute inset-0 z-0 opacity-0;
+    background: radial-gradient(
+      420px circle at var(--mx) var(--my),
+      rgb(255 255 255 / 0.08),
+      transparent 60%
+    );
+    transition: opacity 0.5s var(--ease);
+  }
+
+  @media (hover: hover) {
+    .spotlight:hover::before {
+      @apply opacity-100;
+    }
+  }
+
+  /* ---------------------------------------------------------- ambient --- */
+
+  /*
+   * Aurora. Two blurred blobs in the brand stops on long, offset orbits. It
+   * replaces the flat colour behind every dark band, so those bands have
+   * depth and a slow sense of life without another image request.
+   */
+  .aurora {
+    @apply pointer-events-none absolute inset-0 overflow-hidden;
+  }
+
+  .aurora__blob {
+    @apply absolute rounded-full;
+    filter: blur(90px);
+    will-change: transform;
+  }
+
+  /*
+   * Film grain, as an inline SVG turbulence — about 200 bytes, no request. It
+   * gives flat areas tooth and, more usefully, dithers the wide gradients so
+   * they do not band on an 8-bit display.
+   */
+  .grain::after {
+    content: '';
+    @apply pointer-events-none absolute inset-0 z-[2] opacity-[0.045];
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
   /* A gradient hairline, used to close section headers and dark bands. */
   .rule-gradient {
     @apply h-px w-full bg-brand-hairline;
   }
 
-  /* --------------------------------------------------------- surfaces --- */
-
-  /* Ambient colour behind the dark bands: a soft blob in one of the brand
-     stops, heavily blurred. Depth without another image request. */
-  .glow {
-    @apply pointer-events-none absolute rounded-full blur-[90px];
-  }
-
   .glass-bar {
-    background-color: rgba(11, 7, 8, 0.72);
+    background-color: rgb(11 7 8 / 0.72);
     backdrop-filter: saturate(160%) blur(14px);
     -webkit-backdrop-filter: saturate(160%) blur(14px);
+  }
+
+  /* ------------------------------------------------------------ bento --- */
+
+  /*
+   * One modular grid, tiles of different weights. Everything is 1×1 on a
+   * phone and only takes its intended span once there is room for the
+   * composition to mean anything.
+   */
+  .bento {
+    @apply grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4;
+  }
+
+  .bento > .span-2 {
+    @apply sm:col-span-2;
+  }
+
+  .bento > .span-2-tall {
+    @apply sm:col-span-2 sm:row-span-2;
+  }
+
+  /* ------------------------------------------------- scroll indicators --- */
+
+  /*
+   * Reading progress under the header, driven by the document scroll itself —
+   * `animation-timeline: scroll()`, no listener, no state. Browsers without
+   * scroll-driven animations leave it at scaleX(0), i.e. invisible, which is
+   * the correct fallback for a purely informational bar.
+   */
+  .scroll-progress {
+    @apply h-px w-full origin-left bg-brand-gradient;
+    transform: scaleX(0);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  @keyframes progress-grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
   }
 
   /* ----------------------------------------------------- logo marquee --- */
@@ -557,12 +710,12 @@
   }
 
   /*
-   * Tables. The wrapper carries the rounding, the border and the scroll, so
+   * Tables. The wrapper carries the rounding, the hairline and the scroll, so
    * cells only ever draw their inner rules — no doubled line at the edge, and
    * the corners stay round however many columns a page throws at it.
    */
   .page-body .table-wrap {
-    @apply my-7 overflow-x-auto rounded-xl border border-ink-200 bg-white shadow-soft;
+    @apply my-7 overflow-x-auto rounded-2xl border border-ink-200 bg-surface shadow-soft;
   }
 
   .page-body table {
@@ -586,7 +739,7 @@
      pages use the first column for full phrases ("Core messaging engine"),
      and uppercasing those makes them harder to read, not easier. */
   .page-body thead th {
-    @apply bg-surface-subtle font-display text-[13px] font-semibold uppercase tracking-[0.06em] text-ink-900;
+    @apply bg-surface-subtle font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-ink-900;
   }
 
   .page-body tbody th {
@@ -622,6 +775,7 @@
   .page-body td ol {
     @apply my-2;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

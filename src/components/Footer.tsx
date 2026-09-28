@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Aurora } from '@/components/Aurora';
 import { media } from '@/lib/media';
 import type { SiteContent } from '@/server/types';
 
@@ -22,7 +23,7 @@ export function Footer({ site }: { site: SiteContent }) {
       />
       {/* Closes the last light section against the dark band. */}
       <span aria-hidden="true" className="rule-gradient absolute inset-x-0 top-0" />
-      <span aria-hidden="true" className="glow -left-32 top-10 h-[420px] w-[420px] bg-grad-to opacity-[0.14]" />
+      <Aurora intensity="soft" />
 
       <div className="container-page relative py-16 lg:py-20">
         {/* Newsletter panel */}

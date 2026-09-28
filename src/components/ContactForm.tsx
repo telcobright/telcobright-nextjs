@@ -6,7 +6,7 @@ import { site } from '@content/site';
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 const inputClass =
-  'w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink shadow-soft transition-[border-color,box-shadow] duration-300 placeholder:text-ink-300 hover:border-ink-300 focus:border-grad-to focus:outline-none focus:ring-4 focus:ring-grad-to/10';
+  'w-full rounded-xl border border-ink-200 bg-surface px-4 py-3 text-sm text-ink shadow-soft transition-[border-color,box-shadow] duration-300 placeholder:text-ink-300 hover:border-ink-300 focus:border-grad-to focus:outline-none focus:ring-4 focus:ring-grad-to/10';
 
 const labelClass = 'mb-1.5 block font-display text-[13px] font-medium text-ink-900';
 

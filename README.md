@@ -96,13 +96,12 @@ scripts/
 
 ## Branches
 
-| Branch | Design |
-| --- | --- |
-| `main` | The migrated design: the old site's layout and palette, rebuilt and modernised. |
-| `design-2026` | A newer pass: aurora-lit dark bands, bento composition, cursor spotlight, scroll progress, a tokenised palette. |
+`main` is the site. It carries the design pass that was developed on
+`design-2026` — aurora-lit dark bands, bento composition, cursor spotlight,
+scroll progress and a tokenised palette — merged in on 28 September 2026.
 
-Both carry the same content, the same admin and the same careers pages — they differ only in
-how the public site looks. `npm run migrate:verify` passes on each.
+`design-2026` is kept as the record of that pass and is now identical to
+`main`. Nothing depends on it; delete it whenever you like.
 
 ## Design system
 
@@ -111,17 +110,33 @@ one-off value:
 
 | Where | What |
 | --- | --- |
-| `tailwind.config.ts` | Palette, the brand gradient, the shadow scale (`soft` / `card` / `lift` / `glow`), the easing curve (`ease-out-expo`), keyframes |
-| `src/app/globals.css` | Type scales (`.h-hero`, `.h-section`, `.h-page`, `.lede`), section rhythm (`.section`), buttons (`.btn-*`), cards (`.card`, `.card-dark`), nav links, the logo marquee, the scroll-reveal rules and the long-form `.page-body` styles |
+| `tailwind.config.ts` | Brand palette and gradient, the themed colour tokens, the shadow scale (`soft` / `card` / `lift` / `glow`), the easing curve (`ease-out-expo`), keyframes |
+| `src/app/globals.css` | Both theme palettes, type scales (`.h-hero`, `.h-section`, `.h-page`, `.lede`), section rhythm (`.section`), buttons (`.btn-*`), cards (`.card`, `.card-dark`, `.edge-lit`, `.spotlight`), the bento grid, the aurora and grain layers, scroll reveal and progress, and the long-form `.page-body` styles |
 
-Two conventions are worth knowing before editing a page:
+### Colour
 
-- Put `data-reveal` on an element (or `data-reveal-children` on a list) and it
-  rises into place as it scrolls in. It is pure CSS — `animation-timeline:
-  view()` behind an `@supports` guard — so browsers without scroll-driven
-  animations just render the content, and `prefers-reduced-motion` opts out.
-- Put `data-surface="dark"` on any dark section. It switches the site-wide
-  focus outline to white so keyboard focus stays visible on it.
+Surfaces and text are CSS custom properties on `:root` in `globals.css`, stored
+as bare `R G B` triplets so Tailwind's opacity modifiers keep working
+(`bg-surface/70`, `border-ink-200/60`).
+
+- **Use `bg-surface`, `text-ink-900`, `border-ink-200`** rather than `bg-white`
+  or a hex value, so the palette stays in one place.
+- **`text-white` is still literal white** — correct on the product tiles, the
+  hero and the footer, which are dark bands by design.
+- **Adding a colour?** Add it to the palette in `globals.css`, not to a class.
+
+### Conventions worth knowing before editing a page
+
+- `data-reveal` on an element, or `data-reveal-children` on a list, makes it
+  rise into place as it scrolls in. Pure CSS — `animation-timeline: view()`
+  behind an `@supports` guard — so browsers without scroll-driven animations
+  just render the content, and `prefers-reduced-motion` opts out.
+- `data-surface="dark"` on any dark section switches the site-wide focus
+  outline to white, so keyboard focus stays visible on it.
+- `<Spotlight>` wraps a tile to give it the cursor light. Content inside needs
+  `relative z-[2]`, or the light paints over the text.
+- `<Aurora />` is the ambient layer for a dark band; the parent needs
+  `relative overflow-hidden`.
 
 ## Editing content
 

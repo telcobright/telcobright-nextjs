@@ -10,11 +10,17 @@ import type { Config } from 'tailwindcss';
  *   body             DM Sans 16/1.6, #5A5051
  *   brand gradient   linear-gradient(45deg, #EA580C, #4F46E5)
  *
- * The palette, the gradient and the two typefaces are the brand and are left
- * exactly as they were. What the 2026 refresh adds sits alongside them: a
- * depth scale (shadows tinted with the ink colour rather than flat black), an
- * easing curve, and the keyframes the motion layer uses.
+ * The brand colours, the gradient and the two typefaces are fixed. Everything
+ * that describes a *surface* — page background, text, hairlines, shadows — is a
+ * CSS custom property rather than a literal, so the palette has one home
+ * (`globals.css`) instead of being spread across the components.
+ *
+ * Channels are stored as bare `R G B` triplets so Tailwind's `<alpha-value>`
+ * keeps working: `bg-surface/70` and `border-ink-200/60` behave exactly as they
+ * would against a hex literal.
  */
+const themed = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
+
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}', './content/**/*.{ts,tsx}'],
   theme: {
@@ -39,25 +45,24 @@ const config: Config = {
           to: '#4F46E5',
         },
         ink: {
-          DEFAULT: '#200F10',
-          900: '#171717',
-          700: '#3F3436',
-          600: '#4B5563',
-          500: '#5A5051',
-          400: '#6B7280',
-          300: '#9CA3AF',
-          200: '#D1D5DB',
-          100: '#F3F4F6',
-          50: '#FAFAF9',
+          DEFAULT: themed('--ink'),
+          900: themed('--ink-900'),
+          700: themed('--ink-700'),
+          600: themed('--ink-600'),
+          500: themed('--ink-500'),
+          400: themed('--ink-400'),
+          300: themed('--ink-300'),
+          200: themed('--ink-200'),
+          100: themed('--ink-100'),
+          50: themed('--ink-50'),
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          muted: '#F0EFED',
-          // A hair lighter than `muted`, for panels that sit on top of it.
-          subtle: '#F7F6F4',
-          dark: '#0B0708',
-          // The card black the product tiles use.
-          card: '#150D0E',
+          DEFAULT: themed('--surface'),
+          subtle: themed('--surface-subtle'),
+          muted: themed('--surface-muted'),
+          /** The near-black product tile. */
+          card: themed('--surface-card'),
+          dark: themed('--surface-dark'),
           darker: '#000000',
         },
       },
@@ -67,7 +72,7 @@ const config: Config = {
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       maxWidth: { container: '1400px' },
-      borderRadius: { '4xl': '2rem' },
+      borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
       backgroundImage: {
         'brand-gradient': 'linear-gradient(45deg, #EA580C, #4F46E5)',
         // A washed-out version for hairlines, glows and hover tints.
@@ -76,15 +81,11 @@ const config: Config = {
         'brand-hairline':
           'linear-gradient(90deg, transparent, rgba(234,88,12,.7), rgba(79,70,229,.7), transparent)',
       },
-      /*
-       * Shadows are tinted with the ink brown (#200F10) instead of pure black.
-       * On the warm white the site uses, black shadows read grey and dirty;
-       * the tint keeps them in the same family as the rest of the palette.
-       */
+      /* The depth scale lives in `--shadow-*` in globals.css. */
       boxShadow: {
-        soft: '0 1px 2px rgba(32,15,16,.04), 0 6px 16px -8px rgba(32,15,16,.10)',
-        card: '0 2px 4px rgba(32,15,16,.03), 0 12px 32px -12px rgba(32,15,16,.16)',
-        lift: '0 8px 18px -6px rgba(32,15,16,.10), 0 24px 48px -20px rgba(32,15,16,.28)',
+        soft: 'var(--shadow-soft)',
+        card: 'var(--shadow-card)',
+        lift: 'var(--shadow-lift)',
         glow: '0 10px 30px -12px rgba(234,88,12,.45), 0 12px 40px -16px rgba(79,70,229,.40)',
         header: '0 1px 0 rgba(255,255,255,.06), 0 12px 32px -20px rgba(0,0,0,.8)',
       },
@@ -109,11 +110,25 @@ const config: Config = {
           '0%, 100%': { transform: 'translate3d(0,0,0)' },
           '50%': { transform: 'translate3d(0,-14px,0)' },
         },
+        /* The aurora layers: long, offset orbits, so the light behind the dark
+           bands never repeats at an interval the eye can catch. */
+        'aurora-a': {
+          '0%, 100%': { transform: 'translate3d(0,0,0) scale(1)' },
+          '33%': { transform: 'translate3d(6%,-8%,0) scale(1.12)' },
+          '66%': { transform: 'translate3d(-5%,6%,0) scale(0.94)' },
+        },
+        'aurora-b': {
+          '0%, 100%': { transform: 'translate3d(0,0,0) scale(1.05)' },
+          '40%': { transform: 'translate3d(-8%,5%,0) scale(0.92)' },
+          '75%': { transform: 'translate3d(7%,7%,0) scale(1.15)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up .6s ease-out both',
         'panel-in': 'panel-in .18s cubic-bezier(.16,1,.3,1) both',
         drift: 'drift 9s ease-in-out infinite',
+        'aurora-a': 'aurora-a 26s ease-in-out infinite',
+        'aurora-b': 'aurora-b 34s ease-in-out infinite',
       },
     },
   },
