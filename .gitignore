@@ -18,3 +18,10 @@ data/
 # public; that note describes a live weakness in the old site, so it
 # stays local and goes to the host administrator privately.
 SECURITY-NOTE.md
+
+# Working directory for `npm run build:static` while the server half is
+# set aside. Only exists during a build; if you see it, a build was killed.
+.static-build-stash/
+
+# Static export output.
+/out/

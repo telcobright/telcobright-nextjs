@@ -181,4 +181,6 @@ export async function deleteApplication(id: string): Promise<void> {
 function revalidateCareers(slug?: string) {
   revalidatePath('/careers');
   if (slug) revalidatePath(`/careers/${slug}`);
+  // The sitemap lists open posts, so it goes stale the moment one changes.
+  revalidatePath('/sitemap.xml');
 }

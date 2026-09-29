@@ -187,31 +187,48 @@ that flag will happily push a major version bump on you.
 
 ## Deploying
 
-The site needs a **Node host with a persistent disk**. It is not static: the
-admin, the careers application form, the CV uploads and the legacy 301s all
-need a server. GitHub Pages cannot host it — `output: 'export'` fails the
-build outright.
+There are two builds, because the site has two halves.
 
-### Render (configured)
+### GitHub Pages — the public site, free
 
-`render.yaml` in the repo root describes the whole service. In the Render
-dashboard: **New → Blueprint → this repo**. It sets the build and start
-commands, generates `AUTH_SECRET`, points `DATA_DIR` at `/var/data` and
-attaches a 1 GB disk there.
+```bash
+npm run build:static     # writes out/
+```
 
-**The disk needs a paid instance.** Render attaches disks only to paid
-services; on the free plan the filesystem is wiped on every deploy and every
-wake from sleep, which would take the saved content and every CV with it. So:
+Pushing to `main` does this automatically and publishes it:
+**https://telcobright.github.io/telcobright-nextjs/**
 
-| | |
+`scripts/build-static.mjs` moves the server half out of the tree, exports what
+is left, then puts everything back — the working copy is unchanged afterwards,
+whether the build succeeded or not. What that costs, and what stands in its
+place:
+
+| Lost | Instead |
 | --- | --- |
-| `plan: starter` + disk | Everything persists. What the blueprint ships with. |
-| `plan: free`, no disk | Fine for a demo. Delete the `disk:` block. Content edits and CVs are lost on the next deploy. |
+| `/admin` | Runs locally: `npm run dev`, edit, commit `data/`, push. The next deploy carries the change. |
+| Applying with a CV | An email with the role in the subject, or set `NEXT_PUBLIC_APPLY_FORM_URL` to a Google Form or Formspree page. |
+| The contact form | Email and phone. |
+| Real 301s | Meta-refresh stubs with a canonical link, one per legacy URL. Crawlers follow them; they cost a round trip. |
+| New job posts appearing by themselves | A post added locally is published by the next push. |
 
-### Anywhere else
+The base path is worked out from the repository, so nothing needs editing if
+the repo is renamed. Add `public/CNAME` for a custom domain and it builds for
+the root instead.
 
-Any host that runs `npm start` and keeps a directory works — a VPS, a
-container with a volume, Fly, Railway, Coolify, or a machine you already own:
+**Editing content with the static site:** run the admin locally, make your
+changes, then `git add data && git commit && git push`. Treat `data/` as part
+of the site in this mode — it is gitignored by default precisely because it
+holds CVs, so if you go this route, un-ignore only what you mean to publish.
+
+### A Node host — everything working
+
+`render.yaml` describes the service; in the Render dashboard it is
+**New → Blueprint → this repo**. Keep this build if you want the admin on the
+public URL, real CV uploads and real redirects. Render only attaches a
+persistent disk to a paid instance — on the free plan `/data` is wiped on
+every deploy, taking saved content and every CV with it.
+
+Any host that runs `npm start` and keeps a directory works just as well:
 
 ```bash
 npm ci && npm run build && npm start
@@ -220,13 +237,6 @@ npm ci && npm run build && npm start
 Set `AUTH_SECRET`, and `DATA_DIR` if the data should live outside the
 checkout. **Back up whatever `DATA_DIR` points at** — the CVs exist nowhere
 else.
-
-### Going fully free
-
-If the site must cost nothing, the filesystem is the only thing in the way.
-Everything that touches disk goes through `src/server/store.ts`, so pointing
-it at a hosted Postgres (Neon, Supabase) and object storage (Cloudflare R2)
-for the uploads is a rewrite of that one module and nothing above it.
 
 ## Read this before going live
 

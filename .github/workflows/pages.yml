@@ -1,0 +1,58 @@
+# Publish the static export to GitHub Pages.
+#
+# The site itself is not static — it has an admin, Server Actions and file
+# uploads. `npm run build:static` takes that half out of the tree, exports
+# what is left, and puts it back; scripts/build-static.mjs says exactly what
+# is given up. Editing content still happens locally in /admin: save, commit
+# data/, push, and this workflow redeploys.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; let a run in progress finish rather than cancelling it
+# half-published.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      # The base path is worked out from the repository, so a rename or a
+      # custom domain (public/CNAME) needs no change here.
+      - name: Build the static export
+        run: npm run build:static
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -12,7 +12,8 @@
     "migrate:fetch": "node scripts/migrate/fetch-pages.mjs",
     "migrate:extract": "node scripts/migrate/extract.mjs",
     "migrate:generate": "node scripts/migrate/generate.mjs",
-    "migrate:verify": "node scripts/migrate/verify.mjs"
+    "migrate:verify": "node scripts/migrate/verify.mjs",
+    "build:static": "node scripts/build-static.mjs"
   },
   "dependencies": {
     "next": "^16.3.5",
