@@ -16,8 +16,8 @@ export const site = {
   locale: 'en_US',
   contact: {
     address: 'Venus Complex, KHA-199, Level-5, Middle Badda Gulshan, Dhaka 1212, Bangladesh',
-    phone: '+880 19411 99607',
-    phoneHref: '+8801941199607',
+    phone: '+880 1755-607507',
+    phoneHref: '+8801755607507',
     email: 'info@telcobright.com',
     /** The header's mail icon carried this subject line. */
     mailto: 'mailto:info@telcobright.com?subject=Welcome%20to%20Telcobright%20Limited',
