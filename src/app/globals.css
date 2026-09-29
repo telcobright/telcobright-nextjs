@@ -259,9 +259,10 @@
     @apply scale-x-100;
   }
 
-  /* The "Know More" link, with the arrow that slides on hover. */
+  /* The "Know More" link, with the arrow that slides on hover. The vertical
+     padding is there for fingers: it lifts the tap target from 22px to 38px. */
   .link-arrow {
-    @apply inline-flex items-center gap-3 font-display text-[14px] text-white;
+    @apply inline-flex items-center gap-3 py-2 font-display text-[14px] text-white;
     transition: color 0.3s var(--ease);
   }
 
@@ -719,12 +720,12 @@
   }
 
   .page-body table {
-    @apply w-full border-collapse text-left align-top text-[15px];
+    @apply w-full border-collapse text-left align-top text-[14px] sm:text-[15px];
   }
 
   .page-body th,
   .page-body td {
-    @apply border-b border-r border-ink-200/80 px-4 py-3 align-top;
+    @apply border-b border-r border-ink-200/80 px-3 py-2.5 align-top sm:px-4 sm:py-3;
   }
 
   .page-body tr > *:last-child {

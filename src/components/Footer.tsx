@@ -65,12 +65,12 @@ export function Footer({ site }: { site: SiteContent }) {
               <h3 className="font-display text-[15px] font-bold uppercase tracking-[0.08em] text-white">
                 {col.title}
               </h3>
-              <ul className="mt-5 space-y-3">
+              <ul className="mt-4 space-y-1 lg:mt-5 lg:space-y-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="inline-block text-[15px] text-white/55 transition-all duration-300 ease-out-expo hover:translate-x-1 hover:text-white"
+                      className="inline-block py-1.5 text-[15px] text-white/55 transition-all lg:py-0 duration-300 ease-out-expo hover:translate-x-1 hover:text-white"
                     >
                       {link.label}
                     </Link>
@@ -80,24 +80,32 @@ export function Footer({ site }: { site: SiteContent }) {
             </nav>
           ))}
 
-          <div>
+          {/* Full width below lg, so the phone number and email are not squeezed
+              into half a phone screen and broken mid-word. */}
+          <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <h3 className="font-display text-[15px] font-bold uppercase tracking-[0.08em] text-white">Contact</h3>
             <address className="mt-5 not-italic text-[15px] leading-relaxed text-white/55">
               {site.contact.address}
             </address>
-            <dl className="mt-6 space-y-2 text-[14px]">
-              <div className="flex gap-3">
+            <dl className="mt-6 space-y-1 text-[14px] lg:space-y-2">
+              <div className="flex items-baseline gap-3">
                 <dt className="w-11 shrink-0 text-white/40">Tel :</dt>
                 <dd className="min-w-0 break-words">
-                  <a href={`tel:${site.contact.phoneHref}`} className="text-white/55 transition-colors hover:text-white">
+                  <a
+                    href={`tel:${site.contact.phoneHref}`}
+                    className="inline-block whitespace-nowrap py-1.5 text-white/55 transition-colors hover:text-white lg:py-0"
+                  >
                     {site.contact.phone}
                   </a>
                 </dd>
               </div>
-              <div className="flex gap-3">
+              <div className="flex items-baseline gap-3">
                 <dt className="w-11 shrink-0 text-white/40">Email:</dt>
                 <dd className="min-w-0 break-words">
-                  <a href={`mailto:${site.contact.email}`} className="text-white/55 transition-colors hover:text-white">
+                  <a
+                    href={`mailto:${site.contact.email}`}
+                    className="inline-block py-1.5 text-white/55 transition-colors hover:text-white lg:py-0"
+                  >
                     {site.contact.email}
                   </a>
                 </dd>

@@ -38,6 +38,27 @@ export function Header({ site }: { site: SiteContent }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // While the mobile drawer is open the page behind it should not scroll —
+  // otherwise a swipe on the menu moves the page instead.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = 'hidden';
+    return () => {
+      root.style.overflow = previous;
+    };
+  }, [open]);
+
+  // Rotating a tablet past lg hides the drawer; close it too, so the page is
+  // not left scroll-locked behind a menu nobody can see.
+  useEffect(() => {
+    const wide = window.matchMedia('(min-width: 1024px)');
+    const onChange = () => wide.matches && setOpen(false);
+    wide.addEventListener('change', onChange);
+    return () => wide.removeEventListener('change', onChange);
+  }, []);
+
   // Escape closes whichever layer is open.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -56,7 +77,11 @@ export function Header({ site }: { site: SiteContent }) {
         'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color] duration-500 ease-out-expo',
         scrolled || open
           ? 'glass-bar border-b border-white/10 shadow-header'
-          : 'border-b border-transparent bg-transparent'
+          : 'border-b border-transparent bg-transparent',
+        // Open on a phone, the header becomes a solid full-screen sheet: the
+        // frosted bar lets the page show through, which is fine behind one row
+        // of nav but not behind a whole drawer of links.
+        open && 'max-lg:bottom-0 max-lg:bg-[#0b0708]'
       )}
     >
       <div className="container-page">
@@ -190,7 +215,10 @@ export function Header({ site }: { site: SiteContent }) {
       <div aria-hidden="true" className="scroll-progress absolute inset-x-0 bottom-0" />
 
       {open && (
-        <div id="mobile-nav" className="animate-panel-in lg:hidden">
+        <div
+          id="mobile-nav"
+          className="animate-panel-in max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain lg:hidden"
+        >
           <div className="container-page pb-6">
             <ul className="space-y-1 rounded-2xl border border-white/10 bg-[#141011]/95 p-3 shadow-lift backdrop-blur-xl">
               {headerNav.map((item) => {

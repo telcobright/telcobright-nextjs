@@ -50,7 +50,7 @@ export default async function ContactPage() {
                   Phone
                 </dt>
                 <dd className="mt-2">
-                  <a href={`tel:${site.contact.phoneHref}`} className="font-medium text-grad-to hover:underline">
+                  <a href={`tel:${site.contact.phoneHref}`} className="-my-2 inline-block py-2 font-medium text-grad-to hover:underline">
                     {site.contact.phone}
                   </a>
                 </dd>
@@ -60,7 +60,7 @@ export default async function ContactPage() {
                   Email
                 </dt>
                 <dd className="mt-2">
-                  <a href={`mailto:${site.contact.email}`} className="font-medium text-grad-to hover:underline">
+                  <a href={`mailto:${site.contact.email}`} className="-my-2 inline-block py-2 font-medium text-grad-to hover:underline">
                     {site.contact.email}
                   </a>
                 </dd>

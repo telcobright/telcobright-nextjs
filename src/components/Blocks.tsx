@@ -54,7 +54,14 @@ function Table({ block }: { block: Extract<Block, { t: 'table' }> }) {
     // scrollable by a few pixels on a phone, which is worse. `.table-wrap`
     // carries the rounding, the hairline and the scroll (see globals.css).
     <div className="table-wrap">
-      <table className={oneColumn ? undefined : 'min-w-[38rem]'}>
+      {/* A phone shows only part of a multi-column table; say so, or the
+          columns past the edge read as missing rather than scrollable. */}
+      {!oneColumn && (
+        <p className="sticky left-0 border-b border-ink-200/80 bg-surface-subtle px-3 py-2 text-[12px] text-ink-400 sm:hidden">
+          Swipe sideways to see the whole table →
+        </p>
+      )}
+      <table className={oneColumn ? undefined : 'min-w-[32rem] sm:min-w-[38rem]'}>
         {hasHead && (
           <thead>
             <tr>
