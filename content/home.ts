@@ -1,10 +1,10 @@
 /**
  * Home page content, taken verbatim from https://telcobright.com/
  *
- * Every string below is what the live page renders, including the six service
- * blurbs that all repeat the same "System integration refers to…" sentence and
- * the sections that carry a heading but no body. Those are faithful to the
- * source; see MIGRATION.md for the list of what is placeholder on the old site.
+ * Every string below is what the live page renders, including the sections
+ * that carry a heading but no body. The one deliberate departure is the six
+ * service blurbs in `additional`, which all repeated one placeholder sentence
+ * on the old site; see MIGRATION.md for the rest of what was placeholder there.
  */
 
 export const hero = {
@@ -127,19 +127,42 @@ export const additional = {
   image: '2024/06/1st-mockup.png',
   imageAlt: '',
   /**
-   * All six blurbs repeat the same sentence on the live site. Kept verbatim.
+   * On the old site all six repeated "System integration refers to the process
+   * of bringing together different subsystems or components in order." These
+   * replace that placeholder, one per service.
    */
   services: [
-    { icon: '2024/06/icon1.svg', title: 'System Integration' },
-    { icon: '2024/06/icon2.svg', title: 'Software Development' },
-    { icon: '2024/06/icon3.svg', title: 'Devops management & training' },
-    { icon: '2024/06/icon4.svg', title: 'Network design & deployment' },
-    { icon: '2024/06/icon4-1.svg', title: 'Cloud infrastructure management' },
-    { icon: '2024/06/icon5.svg', title: 'Cloud API integration' },
-  ].map((s) => ({
-    ...s,
-    body: 'System integration refers to the process of bringing together different subsystems or components in order.',
-  })),
+    {
+      icon: '2024/06/icon1.svg',
+      title: 'System Integration',
+      body: 'We connect switches, billing, CRM and messaging platforms into one working system, so data moves between them without manual hand-offs.',
+    },
+    {
+      icon: '2024/06/icon2.svg',
+      title: 'Software Development',
+      body: 'Custom telecom and business software, from carrier-grade back ends to web and mobile front ends, built around your requirements.',
+    },
+    {
+      icon: '2024/06/icon3.svg',
+      title: 'Devops management & training',
+      body: 'We set up CI/CD, monitoring and automation for your platforms, and train your team to run them with confidence.',
+    },
+    {
+      icon: '2024/06/icon4.svg',
+      title: 'Network design & deployment',
+      body: 'Planning, rollout and tuning of IP and telecom networks, from interconnect links to data-centre switching.',
+    },
+    {
+      icon: '2024/06/icon4-1.svg',
+      title: 'Cloud infrastructure management',
+      body: 'We run and scale your servers and services in the cloud or on premises, with monitoring, backups and security patching.',
+    },
+    {
+      icon: '2024/06/icon5.svg',
+      title: 'Cloud API integration',
+      body: 'We connect your systems to SMS, voice, payment and other third-party APIs, with the error handling and logging that production traffic needs.',
+    },
+  ],
 };
 
 export const highlights = [

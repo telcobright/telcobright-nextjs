@@ -37,7 +37,8 @@ export const site = {
     header: '2024/01/Frame-4.png',
     footer: '2024/01/Frame-4.png',
   },
-  copyright: 'Copyright © 2023 | All Rights Reserved By Telcobright Limited',
+  /** `{year}` is replaced with the current year when the page is built. */
+  copyright: 'Copyright © {year} | All Rights Reserved By Telcobright Limited',
 } as const;
 
 /** Primary navigation, in the order the live header lists it. */
@@ -59,36 +60,30 @@ export const headerNav = [
 ] as const;
 
 /**
- * Footer columns, reproduced from the live footer including the links that
- * resolve to "#". Nothing was added, removed or re-pointed.
+ * Footer columns. On the old site nearly every entry here pointed at "#",
+ * because the pages were never built. Each link now goes somewhere real; the
+ * ones with nothing to point at (Who we are, Case Study, Blog, and the whole
+ * Legal column) were removed rather than left dead. Add them back with a href
+ * once those pages exist.
  */
 export const footerNav = [
   {
     title: 'Products & Services',
     links: [
-      { label: 'SMS Gateway', href: '#' },
-      { label: 'Billing Solutions', href: '#' },
-      { label: 'Management', href: '#' },
-      { label: 'Apps & Others​', href: '#' },
+      { label: 'SMS Gateway', href: '/solutions/sms-gateway' },
+      { label: 'Billing Solutions', href: '/solutions/billing-solutions' },
+      { label: 'CDR Analyzer System', href: '/solutions/cdr-analyzer-system' },
+      { label: 'Apps & Others', href: '/solutions/mobile-app-development' },
+      { label: 'All solutions', href: '/solutions' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { label: 'Who we are', href: '#' },
-      { label: 'Case Study', href: '#' },
-      // The one dead footer link that now has a page behind it.
       { label: 'Careers', href: '/careers' },
-      { label: 'Blog', href: '#' },
-      { label: 'Work with us', href: '#' },
-    ],
-  },
-  {
-    title: 'Legal',
-    links: [
-      { label: 'Terms & Conditions', href: '#' },
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Press Release', href: '#' },
+      { label: 'Work with us', href: '/contact' },
+      { label: 'Gallery', href: '/#gallery' },
+      { label: 'FAQ', href: '/#faq' },
     ],
   },
 ] as const;

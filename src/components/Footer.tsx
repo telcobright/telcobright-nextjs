@@ -46,7 +46,7 @@ export function Footer({ site }: { site: SiteContent }) {
         </div>
 
         {/* Columns */}
-        <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 [&>*]:min-w-0 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 [&>*]:min-w-0 sm:grid-cols-3 lg:grid-cols-4">
           <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <Link href="/" aria-label={site.name} className="inline-block transition-opacity hover:opacity-80">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -80,9 +80,9 @@ export function Footer({ site }: { site: SiteContent }) {
             </nav>
           ))}
 
-          {/* Full width below lg, so the phone number and email are not squeezed
-              into half a phone screen and broken mid-word. */}
-          <div className="col-span-2 sm:col-span-3 lg:col-span-1">
+          {/* Full width on phones, so the phone number and email are not
+              squeezed into half the screen and broken mid-word. */}
+          <div className="col-span-2 sm:col-span-1">
             <h3 className="font-display text-[15px] font-bold uppercase tracking-[0.08em] text-white">Contact</h3>
             <address className="mt-5 not-italic text-[15px] leading-relaxed text-white/55">
               {site.contact.address}
@@ -122,7 +122,9 @@ export function Footer({ site }: { site: SiteContent }) {
             <Social href={site.social.linkedin} label="LinkedIn" d={LINKEDIN} />
             <Social href={site.social.medium} label="Medium" d={MEDIUM} />
           </div>
-          <p className="text-[14px] text-white/45">{site.copyright}</p>
+          <p className="text-[14px] text-white/45">
+            {site.copyright.replace('{year}', String(new Date().getFullYear()))}
+          </p>
         </div>
       </div>
     </footer>

@@ -248,6 +248,7 @@ else.
 - **80 images were recovered from a staging host** because they are 404 on
   telcobright.com today — every SMS Gateway diagram and all 48 Billing Solutions
   screenshots. This repo is currently the second copy of them.
-- **Seven things that look like bugs were kept on purpose**, because they are on the
-  live site and parity was the brief: repeated placeholder copy, twelve dead footer
-  links, three empty sections and a lorem-ipsum newsletter. Each is a one-line fix.
+- **A few things that look like bugs were kept on purpose**, because they are on the
+  live site and parity was the brief — a repeated product blurb, a dead Medium icon
+  and some heading typos. The placeholder service copy, the dead footer links, the
+  empty sections and the lorem-ipsum newsletter have since been fixed.

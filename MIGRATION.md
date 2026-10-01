@@ -225,17 +225,19 @@ These look like defects. They are on telcobright.com today, and "same to same"
 was the brief, so they were reproduced rather than fixed. Each is a one-line
 change if you want it fixed — say which.
 
-1. **The six service blurbs all repeat one sentence.** *"System integration
-   refers to the process of bringing together different subsystems or components
-   in order."* appears under all six headings in *Additional Product and
-   solutions*. Real copy goes in `content/home.ts`.
+1. ~~**The six service blurbs all repeat one sentence.**~~ Each service now has
+   its own description in `content/home.ts`. The old site's *"System
+   integration refers to the process of bringing together different subsystems
+   or components in order."* was under all six.
 2. **The Billing Solutions card repeats the SMS Gateway sentence.** On the home
    page, *Billing Solutions* is described as *"Telcobright SMS Platform is a
    highly scalable distributed carrier-grade SMS platform…"*.
-3. **Twelve dead footer links.** *SMS Gateway*, *Billing Solutions*,
-   *Management*, *Apps & Others*, *Who we are*, *Case Study*, *Careers*, *Blog*,
-   *Work with us*, *Terms & Conditions*, *Privacy Policy* and *Press Release*
-   all point at `#`. Edit `footerNav` in `content/site.ts`.
+3. ~~**Twelve dead footer links.**~~ Every footer link now goes to a real page.
+   *Who we are*, *Case Study*, *Blog* and the *Legal* column (*Terms &
+   Conditions*, *Privacy Policy*, *Press Release*) had no page to point at and
+   were removed; add them back in `footerNav` in `content/site.ts` once the
+   pages exist. The copyright line also stopped saying 2023 — it now prints the
+   year of the build.
 4. ~~**Three empty sections.**~~ These were filled in — see *Three empty
    sections, filled* below.
 5. ~~**The newsletter body is untranslated lorem ipsum.**~~ Replaced — see

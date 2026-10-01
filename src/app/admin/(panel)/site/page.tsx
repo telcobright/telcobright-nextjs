@@ -35,7 +35,12 @@ export default async function SiteSettingsPage() {
               hint="No trailing slash. Used for canonical links and the sitemap."
             />
             <Field label="Locale" name="locale" defaultValue={site.locale} hint="For example en_US." />
-            <Field label="Copyright line" name="copyright" defaultValue={site.copyright} />
+            <Field
+              label="Copyright line"
+              name="copyright"
+              defaultValue={site.copyright}
+              hint="Write {year} where the current year should appear."
+            />
           </div>
           <div className="mt-5">
             <TextArea
